@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SeuLab · Área do Aluno | Pulso Lab</title>
+<link rel="icon" href="../assets/seulab-favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: uma jornada de 3 etapas com barra fixa de progresso; cada etapa mostra o que fazer e a tela que a pessoa vai ver */
+:root{
+  --bg:#07080D; --surface:#0D1018; --ink:#F7F8FC; --muted:#9BA4B8; --line:#252B3A;
+  --accent:#8B5CF6; --accent-ink:#FFFFFF; --accent-soft:#21183E;
+  --amber:#35D7C9; --amber-bg:#123C3A; --amber-soft:#102827;
+  --track:#171C29; --ok:#48D597; --ok-soft:#102B22; --bad:#FF767C; --bad-soft:#32191D;
+  --code-bg:#090B12; --code-ink:#F7F8FC; --hl:#35D7C9;
+  --shadow:0 1px 2px rgba(21,23,43,.06),0 10px 28px rgba(21,23,43,.08);
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0F1D; --surface:#171930; --ink:#ECEDF7; --muted:#A3A7C2; --line:#2B2E4C;
+  --accent:#8F89FF; --accent-ink:#0E0F1D; --accent-soft:#25244D;
+  --amber:#F4B851; --amber-bg:#4A3916; --amber-soft:#2A2316;
+  --track:#1E2039; --ok:#55C792; --ok-soft:#173327; --bad:#F08A80; --bad-soft:#3A1E1C;
+  --code-bg:#07080F; --code-ink:#ECEDF7;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E0F1D; --surface:#171930; --ink:#ECEDF7; --muted:#A3A7C2; --line:#2B2E4C;
+  --accent:#8F89FF; --accent-ink:#0E0F1D; --accent-soft:#25244D;
+  --amber:#F4B851; --amber-bg:#4A3916; --amber-soft:#2A2316;
+  --track:#1E2039; --ok:#55C792; --ok-soft:#173327; --bad:#F08A80; --bad-soft:#3A1E1C;
+  --code-bg:#07080F; --code-ink:#ECEDF7;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.3); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.06}
+h2{font-size:clamp(30px,4.4vw,46px);font-stretch:118%;font-weight:800}
+h3{font-size:20px;font-stretch:106%;font-weight:700;line-height:1.25}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch;font-size:18px}
+.muted{color:var(--muted)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+
+/* Barra de jornada */
+.journey{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.journey .wrap{display:flex;align-items:center;gap:14px;height:64px}
+.brand{font-family:var(--f-display);font-weight:800;font-stretch:122%;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:9px}.brand img{width:34px;height:34px;border-radius:9px;display:block}
+.rec{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.jsteps{display:flex;gap:6px;flex:1;justify-content:flex-end;min-width:0}
+.jsteps a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14px;padding:6px 12px 6px 6px;border-radius:999px;white-space:nowrap}
+.jsteps a:hover{background:var(--accent-soft);color:var(--accent)}
+.jn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 13px var(--f-mono);background:var(--track);color:var(--muted)}
+.jsteps a.done .jn{background:var(--ok);color:#fff}
+.jsteps a.done .jn::before{content:"✓"}
+.jsteps a.done .jn span{display:none}
+.jsteps a.help .jn{background:var(--bad-soft);color:var(--bad)}
+
+/* Boas-vindas */
+.welcome{padding-block:56px 40px}
+.welcome h1{font-size:clamp(40px,6.4vw,72px);font-stretch:125%;font-weight:900;letter-spacing:-.02em;margin-top:14px}
+.welcome h1 em{font-style:normal;color:var(--accent)}
+.welcome .lede{margin-top:18px}
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
+.map a{display:grid;gap:6px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px 22px;position:relative}
+.map a:hover{border-color:var(--accent)}
+.map .num{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:44px;line-height:1;color:var(--accent)}
+.map b{font-size:18px}
+.map span{color:var(--muted);font-size:15px}
+.map .time{font:600 12px var(--f-mono);color:var(--muted)}
+.map a.done{background:var(--ok-soft);border-color:transparent}
+.map a.done .num{color:var(--ok)}
+.map a.done::after{content:"Concluída ✓";position:absolute;top:18px;right:18px;font:700 12px var(--f-body);color:var(--ok)}
+
+/* Etapas */
+.stage{padding-block:64px;border-top:1px solid var(--line)}
+.stage-head{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;margin-bottom:32px}
+.big-n{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:clamp(64px,9vw,104px);line-height:.8;color:var(--accent)}
+.stage-head .lede{margin-top:10px}
+
+/* Escolhas (segmentado) */
+.choose{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:26px;align-items:flex-end}
+.choose-g{display:grid;gap:8px}
+.choose-g > span{font-weight:700;font-size:15px}
+.seg{display:inline-flex;background:var(--track);border-radius:14px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{font:600 15px var(--f-body);border:0;background:transparent;color:var(--muted);padding:10px 16px;border-radius:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.seg small{font-weight:600;font-size:11px;color:var(--ok);margin-left:6px}
+
+/* Passos */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:st}
+.steps>li{counter-increment:st;display:grid;grid-template-columns:48px 1fr;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.steps>li::before{content:counter(st);width:48px;height:48px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:800 22px var(--f-display);font-stretch:120%}
+.steps>li>div{min-width:0;display:grid;gap:10px}
+.steps p{color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.two>*{min-width:0}
+.ext{display:inline-flex;align-items:center;gap:6px;font-weight:700;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:8px 14px;border-radius:10px;width:max-content;max-width:100%}
+.note{font-size:15px;border-left:3px solid var(--hl);padding:4px 0 4px 12px}
+.note b{color:var(--ink)}
+
+/* Telas ilustrativas */
+.mock{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;font-size:13px}
+.mock-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--bg)}
+.mock-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.mock-bar span{margin-left:8px;font:600 11.5px var(--f-mono);color:var(--muted)}
+.mock-body{padding:14px;display:grid;gap:10px}
+.mock-cap{font:500 11.5px var(--f-mono);color:var(--muted);margin-top:8px}
+.tabs-m{display:flex;gap:4px;background:var(--track);border-radius:10px;padding:3px;width:max-content}
+.tabs-m span{padding:5px 12px;border-radius:7px;font-weight:600;color:var(--muted)}
+.tabs-m .on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 2px var(--hl)}
+.ring{box-shadow:0 0 0 3px var(--hl)!important;border-radius:8px}
+.m-input{border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.m-send{width:24px;height:24px;border-radius:7px;background:var(--accent);flex:none}
+.m-folder{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:var(--bg);font-weight:600}
+.m-perm{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:10px}
+.m-perm code{font:12px var(--f-mono);background:var(--bg);padding:6px 8px;border-radius:6px;word-break:break-all}
+.m-btns{display:flex;gap:8px;flex-wrap:wrap}
+.m-btns span{padding:6px 12px;border-radius:8px;font-weight:700;border:1px solid var(--line)}
+.m-btns .yes{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tree{font-family:var(--f-mono);font-size:13px;display:grid;gap:4px}
+.tree div{padding:4px 8px;border-radius:6px}
+.tree .file{background:var(--amber-soft);font-weight:600}
+.studio{display:grid;gap:8px}
+.studio .scr{aspect-ratio:16/9;max-width:100%;border-radius:8px;background:linear-gradient(135deg,#3B33E0,#7B3FA8 55%,#C97A00);display:grid;place-items:center;color:#fff;font:900 22px var(--f-display);font-stretch:125%}
+.studio .tl{height:26px;border-radius:6px;background:var(--track);position:relative}
+.studio .tl::before{content:"";position:absolute;left:2%;width:60%;top:4px;bottom:4px;background:var(--accent);border-radius:4px}
+.studio .tl::after{content:"";position:absolute;left:40%;top:-3px;bottom:-3px;width:2px;background:var(--hl)}
+
+/* Código e cópia */
+.code-wrap{position:relative;min-width:0}
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px 18px;padding-right:110px;font:14px/1.65 var(--f-mono);white-space:pre-wrap;word-break:break-word;margin:0;max-height:none}
+.code.big{font-size:14.5px}
+.copy{position:absolute;top:12px;right:12px;font:700 13.5px var(--f-body);background:var(--hl);color:#15172B;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
+.copy.done{background:#18804F;color:#fff}
+.copy-hero{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.copy-hero .btn{font:700 16px var(--f-body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:13px 22px;cursor:pointer}
+.copy-hero .btn.done{background:var(--ok);color:#fff}
+
+/* OK / problema */
+.okbad{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.okbad div{border-radius:14px;padding:16px 18px;font-size:15.5px}
+.okbad .y{background:var(--ok-soft)}
+.okbad .n{background:var(--amber-soft)}
+.okbad b{display:block;margin-bottom:4px}
+
+.done-btn{margin-top:22px;font:700 16px var(--f-body);background:transparent;color:var(--ok);border:2px solid var(--ok);border-radius:12px;padding:12px 20px;cursor:pointer}
+.done-btn[aria-pressed="true"]{background:var(--ok);color:#fff}
+
+details.alt{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:4px 20px}
+details.alt summary{cursor:pointer;font-weight:700;padding:14px 0}
+details.alt[open]{padding-bottom:18px}
+details.alt .code-wrap{margin-top:8px}
+
+/* Caminhos */
+.path-pick{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.pp{text-align:left;font:inherit;color:inherit;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:24px;cursor:pointer;display:grid;gap:8px}
+.pp .tag{display:flex;align-items:center;gap:10px;font:700 13px var(--f-mono);text-transform:uppercase;letter-spacing:.05em}
+.pp .badge{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font:900 19px var(--f-display)}
+.pp.a .badge{background:var(--accent);color:var(--accent-ink)}
+.pp.b .badge{background:var(--hl);color:#15172B}
+.pp b{font-family:var(--f-display);font-size:24px;font-stretch:115%;font-weight:800;line-height:1.1}
+.pp span.d{color:var(--muted);font-size:15.5px}
+.pp[aria-pressed="true"].a{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.pp[aria-pressed="true"].b{border-color:var(--hl);box-shadow:0 0 0 4px var(--amber-soft)}
+
+.sub{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:34px 0 16px}
+.sub .k{font:800 14px var(--f-mono);background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:8px}
+.sub h3{font-size:24px;font-stretch:112%}
+
+/* Montador */
+.builder{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;display:grid;gap:22px}
+.q{display:grid;gap:10px;border:0;margin:0;padding:0;min-width:0}
+.q legend,.q > label{font-weight:700;font-size:16px;padding:0;margin-bottom:2px}
+.q .hint{font-size:14px;color:var(--muted);margin-top:-6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt > span{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;font-size:15px;font-weight:500}
+.opt input:checked + span{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.opt input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.txt{font:500 16px var(--f-body);padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.txt:focus{border-color:var(--accent);outline:none}
+textarea.txt{min-height:90px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.row2>*{min-width:0}
+
+/* prévias visuais dentro das opções */
+.cardopts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cardopts .opt > span{display:grid;gap:8px;padding:10px;width:100%;justify-items:stretch;text-align:center}
+.prev{aspect-ratio:9/12;border-radius:8px;display:grid;place-items:end center;padding:8px;overflow:hidden;background:repeating-linear-gradient(135deg,#55586E 0 8px,#4D5065 8px 16px)}
+.cs-1{font:900 13px var(--f-display);color:#fff;text-transform:uppercase;-webkit-text-stroke:.6px #000;text-shadow:0 2px 0 #000}
+.cs-2{font:900 13px var(--f-display);color:#fff;text-transform:uppercase;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.cs-2 b{color:#FFD166}
+.cs-3{font:700 12px var(--f-body);color:#15172B;background:#fff;padding:3px 7px;border-radius:5px}
+.cs-4{font:500 12px var(--f-body);color:#fff;text-transform:lowercase;letter-spacing:.02em}
+.st{aspect-ratio:9/12;border-radius:8px;display:grid;place-items:center;padding:8px;overflow:hidden;text-align:center;line-height:1}
+.st-1{background:#F2EEE8;color:#2B2A28;font:400 15px Georgia,serif;letter-spacing:.04em}
+.st-2{background:#FF4F8B;color:#FFF35C;font:900 17px var(--f-display);font-stretch:125%;transform:rotate(-4deg)}
+.st-3{background:#0F2D52;color:#fff;font:700 13px var(--f-body);border-left:6px solid #3AA8FF}
+.st-4{background:#111;color:#fff;font:900 19px var(--f-display);font-stretch:62%;text-transform:uppercase;letter-spacing:-.01em}
+.sw{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid rgba(0,0,0,.15)}
+
+.result-label{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.result-label b{font-family:var(--f-display);font-size:20px;font-stretch:112%}
+
+/* Comece a gravar */
+.rec-tips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.rec-tips div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:15px;display:grid;gap:4px;align-content:start}
+.rec-tips b{font-size:15.5px}
+.rec-tips span{color:var(--muted)}
+@media (max-width:860px){.rec-tips{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.rec-tips{grid-template-columns:1fr}}
+
+/* Ajustes */
+.tweaks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tw{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.tw p{font-size:15px;min-width:0}
+.tw p b{display:block;font-size:13px;font-family:var(--f-mono);color:var(--accent);font-weight:600;margin-bottom:2px}
+.tw button{font:700 13px var(--f-body);border:0;border-radius:9px;padding:8px 12px;background:var(--hl);color:#15172B;cursor:pointer}
+.tw button.done{background:#18804F;color:#fff}
+
+/* Socorro */
+.sos{background:var(--bad-soft);border-radius:22px;padding:30px;display:grid;gap:16px}
+.sos h2{color:var(--bad)}
+.faq{display:grid;gap:10px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 20px}
+.faq summary{cursor:pointer;font-weight:700;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--accent);font-size:20px;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding-bottom:16px;color:var(--muted);font-size:16px}
+
+footer{padding-block:40px 60px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--line)}
+footer .wrap{display:grid;gap:6px}
+
+@media (max-width:860px){
+  .two,.row2,.path-pick,.okbad,.tweaks{grid-template-columns:1fr}
+  .map{grid-template-columns:1fr}
+  .cardopts{grid-template-columns:repeat(2,1fr)}
+  .jsteps .lbl{display:none}
+  .jsteps a{padding:6px}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .stage{padding-block:48px}
+  .stage-head{grid-template-columns:1fr;gap:8px}
+  .steps>li{grid-template-columns:1fr;padding:18px}
+  .builder{padding:18px}
+  .code{padding-right:18px;padding-top:56px}
+  .brand .full{display:none}
+  .sos{padding:22px}
+}
+
+/* Portão de acesso */
+.gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:24px}
+.gate-card{max-width:440px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:36px 30px;display:grid;gap:18px;text-align:center}
+.gate-card .brand{justify-content:center;font-size:17px}
+.gate-card h1{font-size:clamp(26px,5vw,32px);font-stretch:120%;font-weight:900}
+.gate-card p{color:var(--muted);font-size:15.5px}
+.gate-card .btn{font:700 16px var(--f-body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:14px 22px;text-decoration:none;display:block}
+.gate-card .sep{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:4px 0}
+.gate-card .sep::before,.gate-card .sep::after{content:"";height:1px;background:var(--line);flex:1}
+.gate-form{display:grid;gap:10px}
+.gate-form input{font:500 15px var(--f-body);padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.gate-form button{font:700 15px var(--f-body);background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.gate-err{color:var(--bad);font-size:13.5px;min-height:18px}
+</style>
+
+<div class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <div class="brand"><span class="rec" aria-hidden="true"></span>SeuLab</div>
+    <h1>Acesso à área do aluno</h1>
+    <p>Esta área é exclusiva para quem comprou o SeuLab. Use o link de acesso que você recebeu por e-mail, ou cole a sua chave abaixo.</p>
+    <a class="btn" href="#" id="gate-buy" target="_blank" rel="noopener">Ainda não comprei → Quero acessar o SeuLab</a>
+    <div class="sep">ou</div>
+    <form class="gate-form" id="gate-form">
+      <input type="text" id="gate-key" placeholder="Cole aqui a sua chave de acesso" autocomplete="off">
+      <button type="submit">Entrar</button>
+      <div class="gate-err" id="gate-err"></div>
+    </form>
+  </div>
+</div>
+
+<header class="journey">
+  <div class="wrap">
+    <div class="brand"><span class="rec" aria-hidden="true"></span>SeuLab<span class="full">&nbsp;· Área do Aluno</span></div>
+    <nav class="jsteps" aria-label="Etapas">
+      <a href="#etapa-1" data-stage="1"><span class="jn"><span>1</span></span><span class="lbl">Preparar</span></a>
+      <a href="#etapa-2" data-stage="2"><span class="jn"><span>2</span></span><span class="lbl">Instalar</span></a>
+      <a href="#etapa-3" data-stage="3"><span class="jn"><span>3</span></span><span class="lbl">Criar</span></a>
+      <a href="#socorro" class="help"><span class="jn">?</span><span class="lbl">Socorro</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="welcome">
+  <div class="wrap">
+    <div class="eyebrow">Boas-vindas ao SeuLab</div>
+    <h1>Três etapas até o seu <em>primeiro vídeo.</em></h1>
+    <p class="lede">Você não precisa entender de programação. Em cada passo, você vê o que fazer e o que vai aparecer na sua tela. Quando terminar uma etapa, marque como concluída. O seu progresso fica salvo neste navegador.</p>
+    <div class="map">
+      <a href="#etapa-1" data-stage="1"><span class="num">1</span><b>Preparar o computador</b><span>Instalar o Claude Code ou o Codex e o Node.js.</span><span class="time">⏱ cerca de 15 min</span></a>
+      <a href="#etapa-2" data-stage="2"><span class="num">2</span><b>Instalar o kit</b><span>Copiar um prompt, colar e aprovar.</span><span class="time">⏱ cerca de 10 min</span></a>
+      <a href="#etapa-3" data-stage="3"><span class="num">3</span><b>Criar o vídeo</b><span>Pegar um roteiro, gravar e editar, ou criar uma animação.</span><span class="time">⏱ minutos por vídeo</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ETAPA 1 -->
+<section class="stage" id="etapa-1">
+  <div class="wrap">
+    <div class="stage-head">
+      <div class="big-n">1</div>
+      <div><h2>Prepare o seu computador</h2><p class="lede">Escolha a IA que você vai usar e o seu computador. O passo a passo se ajusta às suas escolhas.</p></div>
+    </div>
+
+    <div class="choose">
+      <div class="choose-g"><span>Qual IA você vai usar?</span>
+        <div class="seg" role="group" aria-label="Ferramenta">
+          <button type="button" data-tool="claude" aria-pressed="true">Claude Code<small>recomendado</small></button>
+          <button type="button" data-tool="codex" aria-pressed="false">Codex</button>
+        </div>
+      </div>
+      <div class="choose-g"><span>Qual é o seu computador?</span>
+        <div class="seg" role="group" aria-label="Computador">
+          <button type="button" data-os="win" aria-pressed="true">Windows</button>
+          <button type="button" data-os="mac" aria-pressed="false">Mac</button>
+        </div>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><div>
+        <h3>Tenha um plano pago da IA</h3>
+        <p data-when-tool="claude">O Claude Code faz parte dos planos pagos do Claude (Pro ou Max). Assine em claude.ai, se ainda não tiver.</p>
+        <p data-when-tool="codex" hidden>O Codex faz parte dos planos pagos do ChatGPT (Plus ou superior). Assine em chatgpt.com, se ainda não tiver.</p>
+      </div></li>
+
+      <li><div class="two">
+        <div style="display:grid;gap:10px">
+          <h3 data-when-tool="claude">Baixe o app do Claude para computador</h3>
+          <h3 data-when-tool="codex" hidden>Baixe o app do Codex</h3>
+          <p data-when-tool="claude">Entre no endereço abaixo, baixe a versão <span data-when-os="win">para Windows</span><span data-when-os="mac" hidden>para Mac</span>, instale como qualquer programa e entre com a sua conta.</p>
+          <p data-when-tool="codex" hidden>Entre no endereço abaixo, baixe a versão <span data-when-os="win">para Windows</span><span data-when-os="mac" hidden>para Mac</span>, instale e entre com a sua conta do ChatGPT.</p>
+          <a class="ext" data-when-tool="claude" href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download ↗</a>
+          <a class="ext" data-when-tool="codex" hidden href="https://chatgpt.com/codex" target="_blank" rel="noopener">chatgpt.com/codex ↗</a>
+          <p class="note" data-when-tool="claude">Depois de entrar, clique na aba <b>Code</b>, no topo do app. É lá que o kit funciona.</p>
+          <p class="note" data-when-os="win">No Windows, se o app pedir para instalar o <b>Git</b>, aceite ou baixe em git-scm.com. É gratuito.</p>
+        </div>
+        <div>
+          <div class="mock" data-when-tool="claude" aria-hidden="true">
+            <div class="mock-bar"><i></i><i></i><i></i><span>Claude</span></div>
+            <div class="mock-body">
+              <div class="tabs-m"><span>Chat</span><span class="on">Code</span></div>
+              <div class="m-folder">📁 Kit Video Pro</div>
+              <div class="m-input">Descreva uma tarefa…<span class="m-send"></span></div>
+            </div>
+          </div>
+          <div class="mock" data-when-tool="codex" hidden aria-hidden="true">
+            <div class="mock-bar"><i></i><i></i><i></i><span>Codex</span></div>
+            <div class="mock-body">
+              <div class="m-folder ring">📁 Kit Video Pro</div>
+              <div class="m-input">Peça ao Codex…<span class="m-send"></span></div>
+            </div>
+          </div>
+          <p class="mock-cap">Ilustração. Os botões podem mudar de lugar em novas versões do app.</p>
+        </div>
+      </div></li>
+
+      <li><div class="two">
+        <div style="display:grid;gap:10px">
+          <h3>Instale o Node.js, o motor dos vídeos</h3>
+          <p>Entre em nodejs.org e clique no botão verde da versão <b>LTS</b>. Abra o arquivo baixado <span data-when-os="win">(termina em .msi)</span><span data-when-os="mac" hidden>(termina em .pkg)</span> e clique em "Avançar" até terminar.</p>
+          <a class="ext" href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org ↗</a>
+          <p class="note">Depois de instalar, <b>feche e abra de novo</b> o app <span data-when-tool="claude">do Claude</span><span data-when-tool="codex" hidden>do Codex</span>. Assim ele reconhece o Node.js.</p>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <div class="mock-bar"><i></i><i></i><i></i><span>nodejs.org</span></div>
+          <div class="mock-body" style="justify-items:center;padding:22px">
+            <b style="font-size:15px">Baixar Node.js</b>
+            <span class="ring" style="background:#3C873A;color:#fff;font-weight:700;padding:8px 16px">LTS · Recomendado</span>
+            <span class="muted">Atual</span>
+          </div>
+        </div>
+      </div></li>
+
+      <li><div class="two">
+        <div style="display:grid;gap:10px">
+          <h3>Crie a pasta do seu estúdio</h3>
+          <p>Em <span data-when-os="win">Documentos, no Explorador de Arquivos,</span><span data-when-os="mac" hidden>Documentos, no Finder,</span> crie uma pasta chamada <b>Kit Video Pro</b>. Depois, no <span data-when-tool="claude">Claude Code</span><span data-when-tool="codex" hidden>Codex</span>, escolha essa pasta como pasta de trabalho.</p>
+          <p class="note">Todos os seus vídeos vão ficar dentro dela.</p>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <div class="mock-bar"><i></i><i></i><i></i><span>Documentos</span></div>
+          <div class="mock-body tree">
+            <div>📁 Documentos</div>
+            <div class="file" style="margin-left:18px">📁 Kit Video Pro</div>
+          </div>
+        </div>
+      </div></li>
+    </ol>
+    <button type="button" class="done-btn" data-done="1" aria-pressed="false">Concluí a etapa 1</button>
+  </div>
+</section>
+
+<!-- ETAPA 2 -->
+<section class="stage" id="etapa-2">
+  <div class="wrap">
+    <div class="stage-head">
+      <div class="big-n">2</div>
+      <div><h2>Instale o kit com um único prompt</h2><p class="lede">Copie o texto abaixo, cole <span data-when-tool="claude">no Claude Code</span><span data-when-tool="codex" hidden>no Codex</span>, aberto na pasta Kit Video Pro, e aperte Enter. A IA faz o resto.</p></div>
+    </div>
+
+    <div class="copy-hero"><b>Prompt de instalação</b><button type="button" class="btn" data-copy="p-install">Copiar prompt de instalação</button></div>
+    <div class="code-wrap">
+<pre class="code big" id="p-install">Você vai instalar o SeuLab neste computador. Eu não sei programar. Fale comigo em português simples, um passo de cada vez, e me avise antes de cada comando.
+
+1. Confira se o Node.js está instalado. Se não estiver, pare e me peça para instalar pelo site nodejs.org.
+2. Instale as habilidades de vídeo do Remotion com o comando: npx skills add remotion-dev/skills
+3. Nesta pasta, crie um projeto Remotion chamado "estudio" com o comando: npx create-video@latest --yes --blank --no-tailwind estudio
+   Depois, instale as dependências dentro da pasta estudio.
+4. Crie a pasta estudio/public/entrada. É onde eu vou colocar os meus vídeos, músicas e logos.
+5. Faça um vídeo de teste de 5 segundos com o texto "Funcionou!" em letras grandes, no centro.
+6. Abra o Remotion Studio no navegador para eu ver a prévia.
+7. No final, me diga em uma frase se deu tudo certo e onde fica a pasta entrada no meu computador.</pre>
+      <button type="button" class="copy" data-copy="p-install">Copiar</button>
+    </div>
+
+    <div class="sub"><span class="k">NA TELA</span><h3>O que vai acontecer depois de colar</h3></div>
+    <ol class="steps">
+      <li><div class="two">
+        <div style="display:grid;gap:10px"><h3>A IA pede permissão</h3><p>Antes de cada comando, aparece um aviso perguntando se pode executar. Leia e clique em <b>Permitir</b>. Isso vai acontecer algumas vezes.</p></div>
+        <div class="mock" aria-hidden="true"><div class="mock-body"><div class="m-perm"><span>Permitir este comando?</span><code>npx skills add remotion-dev/skills</code><div class="m-btns"><span class="yes ring">Permitir</span><span>Negar</span></div></div></div></div>
+      </div></li>
+      <li><div><h3>A instalação roda sozinha</h3><p>Vão aparecer muitas linhas de texto. É normal. Na primeira vez, leva alguns minutos. Não feche o app.</p></div></li>
+      <li><div class="two">
+        <div style="display:grid;gap:10px"><h3>Abre o navegador com "Funcionou!"</h3><p>Uma aba nova abre com o Remotion Studio: a prévia do vídeo em cima e a linha do tempo embaixo. Essa é a sua mesa de edição.</p></div>
+        <div class="mock" aria-hidden="true"><div class="mock-bar"><i></i><i></i><i></i><span>localhost:3000 · Remotion Studio</span></div><div class="mock-body studio"><div class="scr">Funcionou!</div><div class="tl"></div></div></div>
+      </div></li>
+    </ol>
+
+    <div class="okbad" style="margin-top:18px">
+      <div class="y"><b>Deu certo se…</b>a prévia abriu no navegador com "Funcionou!". Pode marcar a etapa como concluída.</div>
+      <div class="n"><b>Não deu?</b>Copie o <a href="#socorro">prompt de socorro</a> e cole na mesma conversa. A IA explica o que aconteceu e resolve.</div>
+    </div>
+
+    <details class="alt" data-when-tool="claude" style="margin-top:18px">
+      <summary>Alternativa para o Claude Code: instalar como plugin oficial</summary>
+      <p class="muted">Se preferir, cole estes dois comandos, um de cada vez, na caixa de mensagem do Claude Code. Eles instalam o plugin oficial do Remotion. Depois, cole o prompt de instalação acima mesmo assim, para criar o projeto e a pasta entrada.</p>
+      <div class="code-wrap"><pre class="code" id="p-plugin">/plugin marketplace add remotion-dev/claude-code-plugin
+/plugin install remotion@remotion</pre><button type="button" class="copy" data-copy="p-plugin">Copiar</button></div>
+    </details>
+
+    <button type="button" class="done-btn" data-done="2" aria-pressed="false">Concluí a etapa 2</button>
+  </div>
+</section>
+
+<!-- ETAPA 3 -->
+<section class="stage" id="etapa-3">
+  <div class="wrap">
+    <div class="stage-head">
+      <div class="big-n">3</div>
+      <div><h2>Escolha o seu caminho</h2><p class="lede">Comece sempre uma <b>conversa nova</b> na pasta Kit Video Pro. Assim a IA carrega as habilidades de vídeo que você acabou de instalar.</p></div>
+    </div>
+
+    <div class="path-pick" role="group" aria-label="Caminho">
+      <button type="button" class="pp a" data-path="a" aria-pressed="true">
+        <span class="tag"><span class="badge">A</span>Edite meu vídeo</span>
+        <b>Você grava. A IA edita por completo.</b>
+        <span class="d">Cortes, legendas, zoom, título, efeitos, música e exportação.</span>
+      </button>
+      <button type="button" class="pp b" data-path="b" aria-pressed="false">
+        <span class="tag"><span class="badge">B</span>Crie um vídeo animado</span>
+        <b>Você tem a ideia. A IA anima do zero.</b>
+        <span class="d">Roteiro, cenas animadas, estilo visual, locução e capa.</span>
+      </button>
+    </div>
+
+    <!-- CAMINHO A -->
+    <div id="path-a">
+      <div class="sub"><span class="k">A0</span><h3>Ainda não gravou? Comece por aqui</h3></div>
+      <p class="muted" style="margin-bottom:14px">Preencha, copie e cole numa conversa nova. A IA escreve 7 roteiros curtos para a sua primeira semana, prontos para ler na frente da câmera. Já tem vídeo gravado? Pule para o A1.</p>
+      <form class="builder" id="form-r" onsubmit="return false">
+        <div class="row2">
+          <div class="q"><label for="r-what">O que você vende ou ensina?</label><input class="txt" id="r-what" value="bolos e doces de festa sob encomenda"></div>
+          <div class="q"><label for="r-who">Para quem?</label><input class="txt" id="r-who" value="mães que organizam festas de aniversário em casa"></div>
+        </div>
+        <fieldset class="q"><legend>Seu jeito de falar</legend><div class="opts">
+          <label class="opt"><input type="radio" name="r-tone" value="leve e próximo, como uma conversa com uma amiga" checked><span>☕ Leve, de amiga</span></label>
+          <label class="opt"><input type="radio" name="r-tone" value="direto e confiante, de especialista"><span>🎯 Direto, de especialista</span></label>
+          <label class="opt"><input type="radio" name="r-tone" value="divertido e animado"><span>😄 Divertido</span></label>
+        </div></fieldset>
+      </form>
+      <div class="copy-hero" style="margin-top:14px"><b>Prompt de roteiros</b><button type="button" class="btn" data-copy="p-r">Copiar prompt de roteiros</button></div>
+      <div class="code-wrap"><pre class="code" id="p-r"></pre><button type="button" class="copy" data-copy="p-r">Copiar</button></div>
+      <div class="sub" style="margin-top:24px"><span class="k">REC</span><h3>Como gravar com o celular</h3></div>
+      <div class="rec-tips">
+        <div><b>📱 Na vertical</b><span>Celular em pé, na altura dos olhos. Apoie numa pilha de livros, se não tiver tripé.</span></div>
+        <div><b>🪟 De frente para a janela</b><span>A luz do dia no rosto. Nunca com a janela atrás de você.</span></div>
+        <div><b>🔇 Lugar silencioso</b><span>O áudio importa mais que a imagem. Feche portas e desligue o ventilador.</span></div>
+        <div><b>🔁 Errou? Continue</b><span>Pause, respire e repita a frase. A IA corta o erro e o silêncio.</span></div>
+      </div>
+      <p class="note" style="margin-top:14px"><b>Grave a semana de uma vez:</b> separe 30 minutos, leia os 7 roteiros em sequência e salve um vídeo para cada. Depois, edite um por um no A2.</p>
+
+      <div class="sub"><span class="k">A1</span><h3>Coloque o seu vídeo na pasta entrada</h3></div>
+      <div class="two">
+        <div style="display:grid;gap:12px">
+          <p>Arraste o vídeo do celular ou do computador para a pasta <b>entrada</b>. Ela fica em Kit Video Pro › estudio › public › entrada.</p>
+          <p class="note"><b>Dê um nome simples ao arquivo</b>, sem espaços e sem acentos. Exemplo: <b>video1.mp4</b>.</p>
+          <p class="note"><b>Dica de gravação:</b> grave na vertical, de frente para a luz, e fale direto. As pausas e os erros a IA corta.</p>
+        </div>
+        <div class="mock" aria-hidden="true"><div class="mock-bar"><i></i><i></i><i></i><span>entrada</span></div><div class="mock-body tree">
+          <div>📁 Kit Video Pro</div><div style="margin-left:16px">📁 estudio</div><div style="margin-left:32px">📁 public</div><div style="margin-left:48px">📁 entrada</div><div class="file" style="margin-left:64px">🎬 video1.mp4</div>
+        </div></div>
+      </div>
+
+      <div class="sub"><span class="k">A2</span><h3>Monte o seu pedido de edição</h3></div>
+      <form class="builder" id="form-a" onsubmit="return false">
+        <div class="row2">
+          <div class="q"><label for="a-file">Nome do arquivo do vídeo</label><input class="txt" id="a-file" value="video1.mp4"></div>
+          <div class="q"><label for="a-music">Música de fundo <span class="muted">(opcional)</span></label><input class="txt" id="a-music" placeholder="ex.: musica.mp3, também na pasta entrada"><span class="hint">Deixe em branco para não usar música.</span></div>
+        </div>
+        <fieldset class="q"><legend>Formato</legend><div class="opts">
+          <label class="opt"><input type="radio" name="a-fmt" value="vertical 1080x1920 (Reels, TikTok e Shorts)" checked><span>📱 Reels / TikTok</span></label>
+          <label class="opt"><input type="radio" name="a-fmt" value="retrato 1080x1350 (feed do Instagram)"><span>▭ Feed 4:5</span></label>
+          <label class="opt"><input type="radio" name="a-fmt" value="horizontal 1920x1080 (YouTube)"><span>🖥 YouTube</span></label>
+        </div></fieldset>
+        <fieldset class="q"><legend>Ritmo dos cortes</legend><div class="opts">
+          <label class="opt"><input type="radio" name="a-cut" value="1|tranquilo"><span>Tranquilo</span></label>
+          <label class="opt"><input type="radio" name="a-cut" value="0.6|dinâmico" checked><span>Dinâmico</span></label>
+          <label class="opt"><input type="radio" name="a-cut" value="0.35|acelerado, estilo TikTok"><span>Acelerado</span></label>
+        </div><span class="hint">Quanto mais acelerado, mais curtas as pausas que ficam no vídeo.</span></fieldset>
+        <fieldset class="q"><legend>Estilo da legenda</legend><div class="opts cardopts">
+          <label class="opt"><input type="radio" name="a-cap" value="clássico: letras brancas, em negrito e caixa alta, com contorno preto" checked><span><span class="prev"><span class="cs-1">Seu texto</span></span>Clássico</span></label>
+          <label class="opt"><input type="radio" name="a-cap" value="destaque: letras brancas em caixa alta, com a palavra que está sendo falada em {cor}"><span><span class="prev"><span class="cs-2">seu <b>texto</b></span></span>Destaque</span></label>
+          <label class="opt"><input type="radio" name="a-cap" value="caixa: texto escuro sobre uma caixa branca de cantos arredondados"><span><span class="prev"><span class="cs-3">Seu texto</span></span>Caixa</span></label>
+          <label class="opt"><input type="radio" name="a-cap" value="minimalista: letras brancas finas, em minúsculas, sem contorno"><span><span class="prev"><span class="cs-4">seu texto</span></span>Minimalista</span></label>
+        </div></fieldset>
+        <fieldset class="q"><legend>Cor de destaque da sua marca</legend><div class="opts">
+          <label class="opt"><input type="radio" name="a-color" value="amarelo" checked><span><i class="sw" style="background:#FFD166"></i>Amarelo</span></label>
+          <label class="opt"><input type="radio" name="a-color" value="rosa"><span><i class="sw" style="background:#FF4F8B"></i>Rosa</span></label>
+          <label class="opt"><input type="radio" name="a-color" value="verde-limão"><span><i class="sw" style="background:#B6F24B"></i>Verde-limão</span></label>
+          <label class="opt"><input type="radio" name="a-color" value="azul"><span><i class="sw" style="background:#3AA8FF"></i>Azul</span></label>
+          <label class="opt"><input type="radio" name="a-color" value="laranja"><span><i class="sw" style="background:#FF8A3D"></i>Laranja</span></label>
+        </div></fieldset>
+        <div class="row2">
+          <div class="q"><label for="a-title">Título de abertura <span class="muted">(opcional)</span></label><input class="txt" id="a-title" value="3 erros que travam suas vendas"></div>
+          <div class="q"><label for="a-cta">Chamada final <span class="muted">(opcional)</span></label><input class="txt" id="a-cta" value="Siga para mais dicas"></div>
+        </div>
+        <fieldset class="q"><legend>Extras</legend><div class="opts">
+          <label class="opt"><input type="checkbox" id="a-zoom" checked><span>🔍 Zoom nos momentos de ênfase</span></label>
+          <label class="opt"><input type="checkbox" id="a-sfx" checked><span>🔊 Efeitos sonoros discretos</span></label>
+          <label class="opt"><input type="checkbox" id="a-cover"><span>🖼 Capa do vídeo</span></label>
+        </div></fieldset>
+      </form>
+
+      <div class="result-label" style="margin-top:18px"><b>Seu prompt de edição completa</b><span class="muted" style="font-size:14px">Ele muda conforme as suas escolhas acima.</span></div>
+      <div class="copy-hero" style="margin-top:10px"><span></span><button type="button" class="btn" data-copy="p-a">Copiar prompt de edição</button></div>
+      <div class="code-wrap"><pre class="code" id="p-a"></pre><button type="button" class="copy" data-copy="p-a">Copiar</button></div>
+      <p class="note" style="margin-top:14px"><b>Na primeira edição,</b> a IA baixa o reconhecimento de fala em português. É um arquivo grande e pode levar alguns minutos. Nas próximas, é bem mais rápido.</p>
+
+      <div class="sub"><span class="k">A3</span><h3>Assista à prévia e peça ajustes</h3></div>
+      <p class="muted" style="margin-bottom:14px">Não gostou de algo? Copie um ajuste pronto e cole na mesma conversa. Troque o que está entre colchetes.</p>
+      <div class="tweaks" id="tw-a"></div>
+
+      <div class="sub"><span class="k">A4</span><h3>Exporte o vídeo final</h3></div>
+      <div class="code-wrap"><pre class="code" id="p-a-exp">/remotion-render Está aprovado. Exporte o vídeo final em MP4, em alta qualidade, e me diga em que pasta ele ficou.</pre><button type="button" class="copy" data-copy="p-a-exp">Copiar</button></div>
+      <p class="note" style="margin-top:14px">O arquivo fica na pasta <b>out</b>, dentro de estudio. É só enviar para o celular e postar.</p>
+    </div>
+
+    <!-- CAMINHO B -->
+    <div id="path-b" hidden>
+      <div class="sub"><span class="k">B1</span><h3>Monte o seu pedido de vídeo animado</h3></div>
+      <form class="builder" id="form-b" onsubmit="return false">
+        <div class="q"><label for="b-what">O que o vídeo vai divulgar?</label><input class="txt" id="b-what" value="minha mentoria de precificação para confeiteiras"></div>
+        <div class="q"><label for="b-who">Para quem?</label><input class="txt" id="b-who" value="confeiteiras que vendem pelo Instagram e cobram barato demais"></div>
+        <fieldset class="q"><legend>Objetivo</legend><div class="opts">
+          <label class="opt"><input type="radio" name="b-goal" value="vender e levar a pessoa a comprar" checked><span>💰 Vender</span></label>
+          <label class="opt"><input type="radio" name="b-goal" value="anunciar um lançamento ou uma novidade"><span>🚀 Lançar</span></label>
+          <label class="opt"><input type="radio" name="b-goal" value="explicar como o serviço funciona"><span>💡 Explicar</span></label>
+          <label class="opt"><input type="radio" name="b-goal" value="ensinar uma dica rápida"><span>🎓 Ensinar</span></label>
+        </div></fieldset>
+        <fieldset class="q"><legend>Estilo visual</legend><div class="opts cardopts">
+          <label class="opt"><input type="radio" name="b-style" value="elegante e minimalista: fundo claro, tipografia serifada fina, muito espaço e movimentos lentos e suaves" checked><span><span class="st st-1">Elegante</span>Elegante</span></label>
+          <label class="opt"><input type="radio" name="b-style" value="vibrante e pop: cores fortes e contrastantes, letras enormes, entradas com mola e um pouco de inclinação"><span><span class="st st-2">POP!</span>Vibrante</span></label>
+          <label class="opt"><input type="radio" name="b-style" value="corporativo e confiável: azul-marinho, fonte sem serifa limpa, ícones simples e transições discretas"><span><span class="st st-3">Confiável</span>Corporativo</span></label>
+          <label class="opt"><input type="radio" name="b-style" value="tipografia cinética: fundo escuro, palavras grandes e condensadas que entram no ritmo da leitura, cortes rápidos"><span><span class="st st-4">Palavra por palavra</span>Tipográfico</span></label>
+        </div></fieldset>
+        <div class="row2">
+          <fieldset class="q"><legend>Formato</legend><div class="opts">
+            <label class="opt"><input type="radio" name="b-fmt" value="vertical 1080x1920 (Reels, TikTok e Shorts)" checked><span>📱 Reels</span></label>
+            <label class="opt"><input type="radio" name="b-fmt" value="retrato 1080x1350 (feed do Instagram)"><span>▭ Feed</span></label>
+            <label class="opt"><input type="radio" name="b-fmt" value="horizontal 1920x1080 (YouTube)"><span>🖥 YouTube</span></label>
+          </div></fieldset>
+          <fieldset class="q"><legend>Duração</legend><div class="opts">
+            <label class="opt"><input type="radio" name="b-dur" value="10"><span>10s</span></label>
+            <label class="opt"><input type="radio" name="b-dur" value="15" checked><span>15s</span></label>
+            <label class="opt"><input type="radio" name="b-dur" value="30"><span>30s</span></label>
+            <label class="opt"><input type="radio" name="b-dur" value="60"><span>60s</span></label>
+          </div></fieldset>
+        </div>
+        <div class="row2">
+          <div class="q"><label for="b-colors">Cores da marca</label><input class="txt" id="b-colors" value="rosa-claro, marrom-chocolate e creme"></div>
+          <div class="q"><label for="b-cta">Chamada final</label><input class="txt" id="b-cta" value="Link na bio para entrar na lista"></div>
+        </div>
+        <div class="q"><label for="b-script">Roteiro <span class="muted">(opcional)</span></label><textarea class="txt" id="b-script" placeholder="Deixe em branco e a IA escreve o roteiro para você aprovar. Ou cole o seu texto, cena por cena."></textarea></div>
+        <fieldset class="q"><legend>Extras</legend><div class="opts">
+          <label class="opt"><input type="checkbox" id="b-logo"><span>🏷 Usar meu logo (logo.png na pasta entrada)</span></label>
+          <label class="opt"><input type="checkbox" id="b-voice"><span>🎙 Locução com voz de IA</span></label>
+          <label class="opt"><input type="checkbox" id="b-sfx" checked><span>🔊 Efeitos sonoros</span></label>
+          <label class="opt"><input type="checkbox" id="b-cover" checked><span>🖼 Capa do vídeo</span></label>
+        </div><span class="hint">A locução usa o ElevenLabs. A IA vai pedir a sua chave de acesso (tem plano gratuito limitado).</span></fieldset>
+      </form>
+
+      <div class="result-label" style="margin-top:18px"><b>Seu prompt de vídeo animado</b><span class="muted" style="font-size:14px">Ele muda conforme as suas escolhas acima.</span></div>
+      <div class="copy-hero" style="margin-top:10px"><span></span><button type="button" class="btn" data-copy="p-b">Copiar prompt de vídeo animado</button></div>
+      <div class="code-wrap"><pre class="code" id="p-b"></pre><button type="button" class="copy" data-copy="p-b">Copiar</button></div>
+
+      <div class="sub"><span class="k">B2</span><h3>Aprove o roteiro, assista e ajuste</h3></div>
+      <p class="muted" style="margin-bottom:14px">A IA primeiro mostra o roteiro. Responda "aprovado" ou peça mudanças. Depois, use os ajustes prontos na prévia.</p>
+      <div class="tweaks" id="tw-b"></div>
+
+      <div class="sub"><span class="k">B3</span><h3>Exporte e reaproveite</h3></div>
+      <div class="code-wrap"><pre class="code" id="p-b-exp">/remotion-render Está aprovado. Exporte o vídeo em MP4, em alta qualidade. Depois, transforme este vídeo em um modelo reutilizável: quero criar o próximo só trocando os textos e as cores. Me diga onde ficaram os arquivos.</pre><button type="button" class="copy" data-copy="p-b-exp">Copiar</button></div>
+    </div>
+
+    <button type="button" class="done-btn" data-done="3" aria-pressed="false">Fiz o meu primeiro vídeo</button>
+  </div>
+</section>
+
+<!-- SOCORRO -->
+<section class="stage" id="socorro">
+  <div class="wrap">
+    <div class="sos">
+      <div class="eyebrow" style="color:var(--bad)">Travou?</div>
+      <h2>Prompt de socorro</h2>
+      <p class="lede">Apareceu um erro, alguma coisa não abriu ou você não entendeu o que a IA disse? Copie e cole na mesma conversa.</p>
+      <div class="code-wrap"><pre class="code" id="p-sos">Algo deu errado e eu não sei programar. Leia as últimas mensagens e erros desta conversa e:
+1. Me explique em português simples, em até 3 frases, o que aconteceu.
+2. Resolva você mesmo o que for possível, me pedindo permissão antes de cada comando.
+3. Se eu precisar fazer algo fora daqui (instalar um programa, clicar em algum lugar), me diga exatamente onde clicar, um passo de cada vez.
+4. No final, confirme se voltou a funcionar.</pre><button type="button" class="copy" data-copy="p-sos">Copiar</button></div>
+    </div>
+
+    <div style="margin-top:40px" class="faq">
+      <h3 style="margin-bottom:8px">Dúvidas comuns</h3>
+      <details><summary>Apareceu "npx não é reconhecido" ou "command not found".</summary><p>O Node.js não está instalado ou o app ainda não o reconheceu. Volte à etapa 1, instale o Node.js e feche e abra o app de novo.</p></details>
+      <details><summary>A prévia não abriu no navegador.</summary><p>Peça: "/remotion-studio abra a prévia e me passe o endereço". Copie o endereço que começa com http://localhost e cole no navegador.</p></details>
+      <details><summary>A legenda saiu com palavras erradas.</summary><p>Use o ajuste pronto "Corrigir uma palavra" no caminho A. Nomes próprios e marcas são os erros mais comuns.</p></details>
+      <details><summary>A edição está demorando muito.</summary><p>Vídeos longos levam mais tempo para transcrever e exportar. Para começar, use vídeos de até 3 minutos. Deixe o computador na tomada.</p></details>
+      <details><summary>Fechei o app. Perdi o meu vídeo?</summary><p>Não. Tudo fica salvo na pasta Kit Video Pro. Abra uma conversa nova na mesma pasta e peça: "abra a prévia do último vídeo".</p></details>
+      <details><summary>Preciso pagar o Remotion?</summary><p>Não, se você for pessoa física ou empresa com até 3 funcionários. Empresas maiores precisam de uma licença paga. Veja remotion.dev/license.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>SeuLab · Edição 01 · uma criação Pulso Lab · outubro de 2026</span>
+    <span>Baseado no Remotion (github.com/remotion-dev/remotion), versão 4.0.535. Guia independente, sem afiliação com o Remotion, a Anthropic ou a OpenAI.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem("seulab-" + k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem("seulab-" + k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  /* ---------- Portão de acesso ----------
+     Proteção simples do lado do cliente: qualquer chave colada ou recebida
+     por e-mail libera o acesso neste navegador. Não substitui validação no
+     servidor, mas já impede o acesso casual de quem não comprou. Para uma
+     validação real, troque este bloco por uma chamada ao webhook/API da Cakto. */
+  var CHECKOUT_URL = "https://pay.cakto.com.br/c2ebywp_1190788"; // Substitua pelo link de checkout da oferta SeuLab na Cakto.
+  (function gate(){
+    var params;
+    try { params = new URLSearchParams(window.location.search); } catch(e){ params = null; }
+    var urlKey = params ? (params.get("acesso") || params.get("key")) : null;
+    if (urlKey) {
+      try { localStorage.setItem("seulab-acesso", urlKey); } catch(e){}
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+      }
+    }
+    var hasAccess;
+    try { hasAccess = !!localStorage.getItem("seulab-acesso"); } catch(e){ hasAccess = true; }
+    var gateEl = document.getElementById("gate");
+    var header = document.querySelector("header.journey");
+    var main = document.querySelector("main");
+    var footer = document.querySelector("footer");
+    if (hasAccess) {
+      if (gateEl) gateEl.hidden = true;
+    } else {
+      if (gateEl) gateEl.hidden = false;
+      if (header) header.hidden = true;
+      if (main) main.hidden = true;
+      if (footer) footer.hidden = true;
+    }
+    var buyLink = document.getElementById("gate-buy");
+    if (buyLink) buyLink.href = CHECKOUT_URL;
+    var form = document.getElementById("gate-form");
+    if (form) form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var key = (document.getElementById("gate-key").value || "").trim();
+      var err = document.getElementById("gate-err");
+      if (!key) { if (err) err.textContent = "Cole a chave que veio no seu e-mail de compra."; return; }
+      try { localStorage.setItem("seulab-acesso", key); } catch(e){}
+      window.location.reload();
+    });
+  })();
+
+  /* ---------- Cópia ---------- */
+  function flash(btn){ var o = btn.textContent; btn.textContent = "Copiado!"; btn.classList.add("done"); setTimeout(function(){ btn.textContent = o; btn.classList.remove("done"); }, 1600); }
+  function copyText(text, btn){
+    var fallback = function(){
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); flash(btn); } catch(e) { btn.textContent = "Selecione e copie"; }
+      document.body.removeChild(ta);
+    };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ flash(btn); }, fallback); else fallback(); } catch(e) { fallback(); }
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-copy]"); if (!b) return;
+    var el = document.getElementById(b.getAttribute("data-copy")); if (el) copyText(el.textContent, b);
+  });
+
+  /* ---------- Escolhas: ferramenta e sistema ---------- */
+  var tool = store.get("tool", "claude"), os = store.get("os", "win");
+  function applyChoice(){
+    $$("[data-tool]").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-tool") === tool ? "true" : "false"); });
+    $$("[data-os]").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-os") === os ? "true" : "false"); });
+    $$("[data-when-tool]").forEach(function(el){ el.hidden = el.getAttribute("data-when-tool") !== tool; });
+    $$("[data-when-os]").forEach(function(el){ el.hidden = el.getAttribute("data-when-os") !== os; });
+    renderTweaks(); buildA(); buildB();
+  }
+  $$("[data-tool]").forEach(function(b){ b.addEventListener("click", function(){ tool = b.getAttribute("data-tool"); store.set("tool", tool); applyChoice(); }); });
+  $$("[data-os]").forEach(function(b){ b.addEventListener("click", function(){ os = b.getAttribute("data-os"); store.set("os", os); applyChoice(); }); });
+
+  /* ---------- Etapas concluídas ---------- */
+  var done = store.get("done", []);
+  function applyDone(){
+    $$("[data-done]").forEach(function(b){ var on = done.indexOf(b.getAttribute("data-done")) > -1; b.setAttribute("aria-pressed", on ? "true" : "false"); });
+    $$("a[data-stage]").forEach(function(a){ a.classList.toggle("done", done.indexOf(a.getAttribute("data-stage")) > -1); });
+  }
+  $$("[data-done]").forEach(function(b){ b.addEventListener("click", function(){
+    var k = b.getAttribute("data-done"), i = done.indexOf(k);
+    if (i > -1) done.splice(i, 1); else done.push(k);
+    store.set("done", done); applyDone();
+  }); });
+  applyDone();
+
+  /* ---------- Caminhos ---------- */
+  var path = store.get("path", "a");
+  function applyPath(){
+    $$("[data-path]").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-path") === path ? "true" : "false"); });
+    $("#path-a").hidden = path !== "a"; $("#path-b").hidden = path !== "b";
+  }
+  $$("[data-path]").forEach(function(b){ b.addEventListener("click", function(){ path = b.getAttribute("data-path"); store.set("path", path); applyPath(); }); });
+  applyPath();
+
+  var radio = function(form, name){ var el = $('input[name="' + name + '"]:checked', form); return el ? el.value : ""; };
+  var val = function(id){ return ($("#" + id).value || "").trim(); };
+  var chk = function(id){ return $("#" + id).checked; };
+  var slash = function(cmd){ return tool === "claude" ? "/" + cmd + " " : "Use a habilidade " + cmd + ". "; };
+
+  /* ---------- Prompt de roteiros ---------- */
+  function buildR(){
+    var f = $("#form-r");
+    $("#p-r").textContent = [
+      "Quero começar a gravar vídeos curtos para o Instagram e não sei o que falar. Me ajude em português do Brasil.",
+      "",
+      "- O que eu vendo ou ensino: " + (val("r-what") || "[o que você vende]"),
+      "- Para quem: " + (val("r-who") || "[seu público]"),
+      "- Meu jeito de falar: " + radio(f, "r-tone"),
+      "",
+      "Escreva 7 roteiros de 30 a 45 segundos, um para cada dia da semana, variando entre: dica rápida, erro comum, bastidores, mito e verdade, pergunta frequente, antes e depois e uma oferta.",
+      "Para cada roteiro, me dê:",
+      "1. Um título curto.",
+      "2. O gancho: a primeira frase, que precisa prender a atenção em 3 segundos.",
+      "3. O texto para eu ler na câmera, em frases curtas, uma por linha, do jeito que eu falaria.",
+      "4. Uma chamada final simples.",
+      "Não use palavras difíceis nem promessas exageradas. No final, me diga com qual roteiro começar e por quê."
+    ].join("\n");
+  }
+  $("#form-r").addEventListener("input", buildR); $("#form-r").addEventListener("change", buildR);
+  buildR();
+
+  /* ---------- Prompt A ---------- */
+  function buildA(){
+    var f = $("#form-a"), file = val("a-file") || "[nome do arquivo]";
+    var cut = radio(f, "a-cut").split("|"), color = radio(f, "a-color");
+    var cap = radio(f, "a-cap").replace("{cor}", color);
+    var music = val("a-music"), title = val("a-title"), cta = val("a-cta");
+    var L = [], n = 0, step = function(t){ L.push((++n) + ". " + t); };
+    L.push(slash("remotion-best-practices") + "Edite por completo o meu vídeo " + file + ", que está na pasta estudio/public/entrada. Eu não sei programar: trabalhe sozinho, me avise antes de cada comando e fale comigo em português simples.");
+    L.push("");
+    L.push("Faça nesta ordem:");
+    step("Crie uma composição nova no formato " + radio(f, "a-fmt") + ". Se o vídeo foi gravado em outro formato, enquadre a pessoa no centro.");
+    step("Corte as pausas e os silêncios com a detecção de silêncio adaptativa do Remotion. Remova pausas maiores que " + cut[0] + " segundo(s), para um ritmo " + cut[1] + ". Deixe cada trecho como um clipe separado na linha do tempo.");
+    step("Transcreva a fala em português do Brasil e gere legendas sincronizadas. Use um modelo de reconhecimento de fala multilíngue (nunca um modelo terminado em .en). Se o computador não tiver placa de vídeo compatível com o @remotion/whisper-webgpu, use o @remotion/install-whisper-cpp, como no modelo TikTok do Remotion.");
+    step("Mostre a legenda com 2 a 4 palavras por vez, no estilo " + cap + ". Posicione na parte de baixo, dentro da área segura, sem cobrir o rosto.");
+    if (chk("a-zoom")) step("Nos momentos de ênfase da fala (números, promessas, palavras fortes), aplique um zoom suave e rápido de cerca de 10%, no máximo um a cada 5 segundos.");
+    if (title) step('Nos 2 primeiros segundos, mostre o título "' + title + '" em letras grandes, com destaque em ' + color + ".");
+    if (chk("a-sfx")) step('Adicione efeitos sonoros discretos da biblioteca do Remotion: um "whoosh" na entrada do título e nos zooms. Volume baixo, sem competir com a voz.');
+    if (music) step("Use a música " + music + " (na pasta entrada) como fundo, em volume baixo, por volta de 10%, sem atrapalhar a fala.");
+    if (cta) step('No final, mostre a chamada "' + cta + '" por 2 segundos, com destaque em ' + color + ".");
+    if (chk("a-cover")) step("Crie também uma imagem de capa no mesmo formato e visual, com o título em letras enormes.");
+    step("Abra o Remotion Studio para eu assistir à prévia. Me diga em uma lista curta o que você fez e quanto o vídeo ficou mais curto. Não exporte ainda: espere a minha aprovação.");
+    $("#p-a").textContent = L.join("\n");
+  }
+
+  /* ---------- Prompt B ---------- */
+  function buildB(){
+    var f = $("#form-b"), script = val("b-script");
+    var L = [], n = 0, step = function(t){ L.push((++n) + ". " + t); };
+    L.push(slash("remotion-create") + "Crie um vídeo animado no projeto estudio. Eu não sei programar: trabalhe sozinho, me avise antes de cada comando e fale comigo em português simples.");
+    L.push("");
+    L.push("Sobre o vídeo:");
+    L.push("- O que divulga: " + (val("b-what") || "[o que o vídeo divulga]"));
+    L.push("- Para quem: " + (val("b-who") || "[público]"));
+    L.push("- Objetivo: " + radio(f, "b-goal"));
+    L.push("- Formato: " + radio(f, "b-fmt") + ", com " + radio(f, "b-dur") + " segundos");
+    L.push("- Estilo visual: " + radio(f, "b-style"));
+    L.push("- Cores da marca: " + (val("b-colors") || "[cores]"));
+    if (val("b-cta")) L.push('- Chamada final: "' + val("b-cta") + '"');
+    L.push("");
+    L.push("Faça nesta ordem:");
+    if (script) step("Use este roteiro, cena por cena, sem mudar o sentido: " + script.replace(/\s*\n\s*/g, " / "));
+    else step("Escreva um roteiro curto em português do Brasil, com um gancho forte nos 2 primeiros segundos, e me mostre cena por cena. Espere eu responder \"aprovado\" antes de animar.");
+    step("Abra o Remotion Studio logo no começo, para eu acompanhar as cenas aparecendo.");
+    step("Anime as cenas no estilo escolhido. Textos grandes e legíveis no celular, dentro da área segura, com transições que combinem com o estilo.");
+    if (chk("b-logo")) step("Use o meu logo (estudio/public/entrada/logo.png) na abertura e no final.");
+    if (chk("b-voice")) step("Adicione locução com voz de IA do ElevenLabs, em português do Brasil, e ajuste a duração de cada cena ao tamanho da fala. Peça a minha chave de acesso e guarde de forma segura, sem mostrar no código.");
+    if (chk("b-sfx")) step('Adicione efeitos sonoros discretos da biblioteca do Remotion nas trocas de cena e um "ding" na chamada final.');
+    if (chk("b-cover")) step("Crie uma imagem de capa no mesmo formato e visual, com no máximo 5 palavras.");
+    step("Me diga o que você fez em uma lista curta. Não exporte ainda: espere a minha aprovação.");
+    $("#p-b").textContent = L.join("\n");
+  }
+  $("#form-a").addEventListener("input", buildA); $("#form-a").addEventListener("change", buildA);
+  $("#form-b").addEventListener("input", buildB); $("#form-b").addEventListener("change", buildB);
+
+  /* ---------- Ajustes prontos ---------- */
+  var TA = [
+    ["Legenda", "Aumente o tamanho da legenda em 30%."],
+    ["Legenda", "Suba a legenda um pouco, ela está cobrindo [o meu queixo / o produto]."],
+    ["Corrigir uma palavra", 'Nas legendas, troque "[palavra errada]" por "[palavra certa]" em todo o vídeo.'],
+    ["Ritmo", "Os cortes estão secos demais. Deixe 0,2 segundo de respiro antes de cada trecho."],
+    ["Ritmo", "Corte o começo do vídeo até o segundo [5]."],
+    ["Zoom", "Tire o zoom que acontece perto do segundo [12] e deixe os outros mais suaves."],
+    ["Som", "Abaixe a música pela metade e tire os efeitos sonoros."],
+    ["Formato", "Faça uma segunda versão no formato horizontal 1920x1080 para o YouTube, com o mesmo conteúdo."]
+  ];
+  var TB = [
+    ["Ritmo", "Deixe as animações 30% mais lentas. Está difícil de ler."],
+    ["Texto", "Aumente todos os textos e deixe mais espaço nas bordas."],
+    ["Texto", 'Na cena [2], troque o texto por: "[novo texto]".'],
+    ["Cores", "Troque a cor principal por [verde-oliva] e mantenha o resto."],
+    ["Logo", "Coloque o meu logo (logo.png na pasta entrada) no canto de cima, pequeno, em todas as cenas."],
+    ["Transições", "Use transições mais suaves, do tipo fade, entre todas as cenas."],
+    ["Duração", "Deixe o vídeo com [10] segundos, mantendo o gancho e a chamada final."],
+    ["Formato", "Faça também uma versão quadrada 1080x1080 para o feed."]
+  ];
+  function renderTweaks(){
+    [["tw-a", TA], ["tw-b", TB]].forEach(function(p){
+      $("#" + p[0]).innerHTML = p[1].map(function(t, i){
+        var id = p[0] + "-" + i;
+        return '<div class="tw"><p><b>' + t[0] + '</b><span id="' + id + '">' + t[1].replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</span></p><button type="button" data-copy="' + id + '">Copiar</button></div>';
+      }).join("");
+    });
+  }
+
+  applyChoice();
+})();
+</script>
+
+</html>

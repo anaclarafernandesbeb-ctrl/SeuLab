@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080D">
+<meta name="description" content="SeuLab Editor de Vídeos IA — um fluxo guiado da Pulso Lab para editar vídeos com Claude Code ou Codex + Remotion, sem precisar dominar editores tradicionais.">
+<title>SeuLab · Editor de Vídeos IA | Pulso Lab</title>
+<link rel="icon" href="assets/seulab-favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080D;--panel:#0D1018;--panel2:#121622;--panel3:#181D2B;
+  --text:#F7F8FC;--muted:#9BA4B8;--faint:#687186;--line:#252B3A;
+  --violet:#8B5CF6;--violet2:#B29AFF;--cyan:#35D7C9;--cyan2:#75F2E7;
+  --green:#48D597;--red:#FF767C;--amber:#FFC66D;
+  --shadow:0 26px 90px rgba(0,0,0,.42);
+  --display:"Archivo",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:
+radial-gradient(circle at 83% 4%,rgba(139,92,246,.16),transparent 30rem),
+radial-gradient(circle at 7% 30%,rgba(53,215,201,.08),transparent 26rem),
+var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+button,input{font:inherit}
+.wrap{width:min(1160px,calc(100% - 40px));margin-inline:auto}
+.narrow{width:min(780px,calc(100% - 40px));margin-inline:auto}
+section{padding:96px 0}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.02;text-wrap:balance}
+h1{font-size:clamp(50px,7vw,92px);font-weight:900;font-stretch:120%;letter-spacing:-.05em}
+h2{font-size:clamp(36px,5vw,62px);font-weight:850;font-stretch:116%;letter-spacing:-.035em}
+h3{font-size:clamp(22px,2.4vw,30px);font-weight:780;letter-spacing:-.02em}
+p{margin:0}
+.eyebrow{font:700 11px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--cyan)}
+.lede{font-size:clamp(18px,2vw,21px);color:var(--muted);max-width:64ch}
+.muted{color:var(--muted)}
+.glow-text{background:linear-gradient(90deg,var(--violet2),var(--cyan2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{min-height:52px;padding:0 23px;border-radius:13px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:750;transition:.2s ease;background:#10141E;color:var(--text)}
+.btn:hover{transform:translateY(-2px);border-color:#3B4358}
+.btn.primary{background:linear-gradient(135deg,var(--violet),#6C45DC);border-color:transparent;box-shadow:0 12px 34px rgba(139,92,246,.28)}
+.btn.ghost{background:rgba(255,255,255,.025)}
+.btn.white{background:#fff;color:#0B0D13;border-color:#fff}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:#C8CFDE;font-size:12px;background:rgba(255,255,255,.025)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(53,215,201,.09)}
+.announcement{background:linear-gradient(90deg,#6B43DA,#346E8C);color:#fff;font:650 12px var(--mono);text-align:center;padding:10px 20px;letter-spacing:.03em}
+.nav{position:sticky;top:0;z-index:80;background:rgba(7,8,13,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-inner{height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-family:var(--display);font-weight:850;letter-spacing:-.02em}.brand-logo{width:38px;height:38px;display:block;border-radius:10px}
+.brand-mark{width:33px;height:33px;border-radius:10px;background:linear-gradient(145deg,var(--violet),#5D3FD3);display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.17)}
+.brand-mark:before{content:"";width:13px;height:15px;background:#fff;clip-path:polygon(0 0,100% 50%,0 100%);transform:translateX(1px)}
+.brand small{color:var(--muted);font:600 11px var(--mono);letter-spacing:.04em}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:13px;color:#AAB2C3}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:#fff}
+.nav-cta{padding:9px 14px;min-height:auto;font-size:13px}
+.hero{padding:86px 0 78px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:58px;align-items:center}
+.hero-copy{position:relative;z-index:2}
+.hero .eyebrow{margin-bottom:20px}
+.hero h1 strong{font-weight:900}
+.hero .lede{margin-top:25px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:31px}
+.hero-proof{display:flex;gap:17px;flex-wrap:wrap;margin-top:20px;color:#8E98AB;font-size:12px}
+.hero-proof span:before{content:"✓";color:var(--cyan);margin-right:6px;font-weight:800}
+.hero-visual{position:relative;min-width:0}
+.editor{border-radius:23px;background:#090C12;border:1px solid #2A3040;box-shadow:var(--shadow),0 0 80px rgba(139,92,246,.13);overflow:hidden;position:relative}
+.editor-bar{height:43px;border-bottom:1px solid #232938;display:flex;align-items:center;padding:0 13px;gap:10px;color:#667087;font:600 9px var(--mono)}
+.traffic{display:flex;gap:5px}.traffic i{width:7px;height:7px;background:#353C4C;border-radius:50%}.traffic i:first-child{background:#8B5CF6}.traffic i:nth-child(2){background:#35D7C9}
+.editor-name{margin:auto}.live{color:var(--cyan)}
+.editor-body{display:grid;grid-template-columns:98px 1fr;min-height:380px}
+.toolrail{border-right:1px solid #232938;padding:17px 8px;display:grid;align-content:start;gap:7px;color:#727C91;font-size:9px}
+.toolrail b{font:700 8px var(--mono);letter-spacing:.13em;color:#495267;padding:0 7px 5px}
+.toolrail span{padding:8px;border-radius:7px}.toolrail .on{background:#171C28;color:#CBBFFF}
+.workspace{padding:15px;display:grid;grid-template-rows:1fr 91px;gap:12px;min-width:0}
+.canvas{border-radius:13px;background:linear-gradient(145deg,#2D225F,#11182C 55%,#0A615D);position:relative;overflow:hidden;display:grid;place-items:center;min-height:250px}
+.canvas:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(255,255,255,.15),transparent 23%),linear-gradient(180deg,transparent,rgba(0,0,0,.18))}
+.ratio{position:absolute;top:11px;left:11px;border:1px solid rgba(255,255,255,.15);background:rgba(5,7,11,.6);border-radius:99px;color:#C5CDDC;padding:4px 7px;font:700 8px var(--mono)}
+.canvas-head{position:absolute;top:35px;text-align:center;font:850 20px/1.02 var(--display);letter-spacing:-.04em;z-index:2}
+.canvas-head b{color:var(--cyan2)}
+.person{width:86px;height:86px;border-radius:50%;background:rgba(255,255,255,.14);box-shadow:0 0 0 17px rgba(255,255,255,.035);z-index:1}
+.caption{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:79%;border-radius:7px;background:rgba(4,6,10,.78);padding:7px 9px;text-align:center;font-size:9px;font-weight:750;z-index:2}
+.caption b{color:var(--cyan2)}
+.timeline{border-top:1px solid #222938;padding-top:9px;position:relative;display:grid;gap:5px}
+.track{display:grid;grid-template-columns:25px 1fr;gap:6px;align-items:center;font:700 7px var(--mono);color:#505B70}
+.track i{height:12px;border-radius:3px;background:#754FE0}.track:nth-child(2) i{background:#35BFB4}.track:nth-child(3) i{background:#374055}
+.playhead{position:absolute;left:64%;top:2px;bottom:0;width:1px;background:#F2F4FA;box-shadow:0 0 7px #fff}
+.prompt{border-top:1px solid #232938;padding:11px 12px;display:flex;align-items:center;gap:7px;background:#0D111A;color:#8791A5;font-size:9px}
+.prompt .spark{color:#B5A1FF;font-size:15px}.prompt b{color:#D9DEEA}.prompt-go{margin-left:auto;background:var(--violet);color:#fff;border-radius:7px;width:25px;height:25px;display:grid;place-items:center}
+.float-card{position:absolute;border:1px solid #2B3344;background:rgba(16,20,30,.94);backdrop-filter:blur(12px);border-radius:13px;padding:11px 13px;box-shadow:0 15px 40px rgba(0,0,0,.35);font-size:10px;color:#98A2B5}
+.float-card b{display:block;color:#F7F8FC;font-size:11px;margin-bottom:3px}.float-card.one{right:-22px;top:54px}.float-card.two{left:-28px;bottom:58px}.status-ok{color:var(--cyan);font:700 9px var(--mono)}
+.compat{padding:18px 0;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.012)}
+.compat-inner{display:flex;align-items:center;justify-content:center;gap:15px;flex-wrap:wrap}
+.compat-label{font:700 9px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:#596278}
+.tech{border:1px solid #242A39;background:#0C0F16;border-radius:9px;padding:7px 11px;color:#AAB3C5;font-size:11px;font-weight:700}
+.section-head{display:grid;gap:17px;margin-bottom:48px}
+.section-head.center{text-align:center;justify-items:center}
+.section-head.center .lede{margin-inline:auto}
+.problem-grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:54px;align-items:start}
+.problem-copy{position:sticky;top:105px;display:grid;gap:18px}
+.problem-cards{display:grid;gap:12px}
+.problem-card{border:1px solid var(--line);background:linear-gradient(145deg,#0D1018,#10141E);border-radius:18px;padding:23px;display:grid;grid-template-columns:43px 1fr;gap:15px}
+.iconbox{width:43px;height:43px;border-radius:12px;background:#181C29;border:1px solid #2B3243;display:grid;place-items:center;color:var(--violet2);font:800 15px var(--mono)}
+.problem-card p{color:var(--muted);font-size:14px;margin-top:5px}
+.transition{background:linear-gradient(180deg,#090B11,#07080D)}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch}
+.compare-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:27px}
+.compare-card.after{border-color:#3A3558;background:linear-gradient(145deg,#111321,#0D171B)}
+.compare-tag{font:700 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#758096}
+.after .compare-tag{color:var(--cyan)}
+.compare-card h3{margin-top:13px}.compare-list{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:12px;color:#AAB3C4;font-size:14px}
+.compare-list li{display:grid;grid-template-columns:21px 1fr;gap:8px}
+.compare-card.before li:before{content:"×";color:#FF777E;font-weight:900}.compare-card.after li:before{content:"✓";color:var(--cyan);font-weight:900}
+.compare-arrow{align-self:center;width:47px;height:47px;border:1px solid #30374A;border-radius:50%;display:grid;place-items:center;color:var(--violet2);font-size:22px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feature{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#0D1018,#111520);padding:24px;min-height:205px;display:flex;flex-direction:column}
+.feature-num{font:750 10px var(--mono);color:#6E7890}.feature h3{font-size:23px;margin-top:21px}.feature p{color:var(--muted);font-size:14px;margin-top:10px}
+.feature .mini{margin-top:auto;padding-top:18px;color:var(--cyan);font:700 9px var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.flow{border:1px solid var(--line);border-radius:27px;background:linear-gradient(145deg,#0E1119,#121725);overflow:hidden}
+.flow-top{padding:35px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr .9fr;gap:30px;align-items:end}
+.flow-demo{padding:24px 35px 35px;display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.flow-step{padding:20px;border:1px solid #272E3F;border-radius:15px;background:#0D111A}
+.flow-step strong{display:block;font-family:var(--display);font-size:20px;margin:10px 0 6px}.flow-step span{color:var(--muted);font-size:13px}.step-n{font:800 10px var(--mono);color:var(--violet2)}
+.code-line{margin-top:18px;border:1px solid #293145;border-radius:10px;background:#090C13;padding:13px;color:#AAB5C8;font:600 10px/1.7 var(--mono);overflow:hidden}
+.code-line b{color:var(--cyan2)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.mode{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:28px;position:relative;overflow:hidden}
+.mode:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;filter:blur(60px);opacity:.12;right:-50px;top:-60px;background:var(--violet)}
+.mode.b:after{background:var(--cyan)}
+.mode-label{display:flex;align-items:center;gap:10px;font:700 10px var(--mono);color:#AAB3C3;text-transform:uppercase;letter-spacing:.1em}.mode-badge{width:30px;height:30px;border-radius:9px;background:var(--violet);display:grid;place-items:center;color:#fff}.mode.b .mode-badge{background:#197E77}
+.mode h3{font-size:30px;margin-top:19px}.mode p{color:var(--muted);font-size:14px;margin-top:11px}.mode ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:9px;color:#BAC2D0;font-size:13px}.mode li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:8px}
+.deliver{display:grid;grid-template-columns:.88fr 1.12fr;gap:48px;align-items:center}
+.stack{position:relative;min-height:430px}
+.stack-card{position:absolute;left:50%;width:min(430px,88%);border:1px solid #30374A;border-radius:20px;background:#10141F;padding:25px;box-shadow:0 25px 60px rgba(0,0,0,.3)}
+.stack-card:nth-child(1){transform:translateX(-50%) rotate(-5deg);top:46px;opacity:.45}
+.stack-card:nth-child(2){transform:translateX(-50%) rotate(3deg);top:25px;opacity:.72}
+.stack-card:nth-child(3){transform:translateX(-50%);top:0;background:linear-gradient(145deg,#15192A,#0D1518);border-color:#423B69}
+.stack-brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800}.stack-screen{margin-top:20px;height:215px;border:1px solid #293145;border-radius:13px;background:linear-gradient(145deg,#2C205B,#12182B 55%,#0D5F5A);position:relative;overflow:hidden}.stack-screen:after{content:"PROMPT → VÍDEO";position:absolute;left:16px;bottom:15px;color:#fff;font:850 27px/1 var(--display);letter-spacing:-.04em}
+.deliver-list{display:grid;gap:11px;margin-top:27px}.deliver-item{display:grid;grid-template-columns:38px 1fr;gap:13px;border-bottom:1px solid #202635;padding:0 0 14px}.deliver-item:last-child{border:0}.deliver-item i{font-style:normal;width:38px;height:38px;border-radius:10px;background:#181D2B;display:grid;place-items:center;color:var(--violet2);font:800 11px var(--mono)}.deliver-item b{display:block}.deliver-item span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.calc-shell{border:1px solid var(--line);background:#0D1018;border-radius:24px;padding:31px;display:grid;grid-template-columns:1fr .9fr;gap:28px}
+.calc-fields{display:grid;gap:17px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700}.field input{width:100%;background:#090C12;border:1px solid #2A3142;color:#fff;padding:12px 13px;border-radius:10px;outline:none}.field input:focus{border-color:var(--violet)}
+.calc-result{border-radius:18px;background:linear-gradient(145deg,#5C3DC4,#245E65);padding:28px;display:flex;flex-direction:column;justify-content:space-between}.calc-kicker{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.1em;opacity:.75}.calc-big{font:850 clamp(52px,6vw,76px)/1 var(--display);letter-spacing:-.05em;margin-top:8px}.calc-sub{border-top:1px solid rgba(255,255,255,.22);padding-top:14px;margin-top:24px;font-size:12px;opacity:.8}
+.fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.fit-card{border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:27px}.fit-card.no{background:#110E13}.fit-card ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:11px;color:#ADB5C5;font-size:14px}.fit-card.yes li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:9px}.fit-card.no li:before{content:"×";color:#FF777E;font-weight:900;margin-right:9px}
+.requirements{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.req{border:1px solid var(--line);background:#0C0F17;border-radius:16px;padding:21px}.req b{display:block;font-size:14px}.req span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+.offer-wrap{position:relative}
+.offer{border:1px solid #4C407A;background:
+radial-gradient(circle at 100% 0,rgba(139,92,246,.22),transparent 24rem),
+linear-gradient(145deg,#111421,#0D1119);border-radius:28px;padding:43px;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;box-shadow:0 30px 90px rgba(0,0,0,.35)}
+.offer-list{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:11px;color:#BAC2D0;font-size:14px}.offer-list li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:9px}
+.pricebox{border:1px solid #343A50;background:rgba(7,9,14,.64);border-radius:21px;padding:28px;text-align:center;align-self:center}.old{color:#737D91;text-decoration:line-through;font-size:14px}.price{font:900 clamp(66px,8vw,96px)/.95 var(--display);letter-spacing:-.06em;margin:8px 0}.price small{font-size:.29em;vertical-align:top;margin-right:5px;letter-spacing:0}.once{color:#99A3B5;font-size:12px}.pricebox .btn{width:100%;margin-top:19px}.micro{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;color:#737E91;font-size:10px;margin-top:13px}
+.guarantee{margin-top:15px;border:1px solid #224B42;background:#0C1917;border-radius:18px;padding:22px 25px;display:grid;grid-template-columns:63px 1fr;gap:17px;align-items:center}.seal{width:63px;height:63px;border:2px solid var(--green);border-radius:50%;display:grid;place-items:center;color:var(--green);font:850 25px/1 var(--display);text-align:center}.seal small{display:block;font:700 8px var(--mono);letter-spacing:.08em}.guarantee p{color:#A9BCB7;font-size:13px}.guarantee b{color:#EAF8F4}
+.faq{display:grid;gap:9px}.faq details{border:1px solid var(--line);background:#0D1018;border-radius:14px;padding:0 20px}.faq summary{list-style:none;cursor:pointer;padding:17px 0;font-weight:720;font-size:14px;display:flex;justify-content:space-between;gap:15px}.faq summary::-webkit-details-marker{display:none}.faq summary:after{content:"+";color:var(--violet2);font:700 18px var(--mono)}.faq details[open] summary:after{content:"–"}.faq p{color:var(--muted);font-size:13px;padding:0 0 18px}
+.final{padding:82px 0;background:linear-gradient(135deg,#5B36C9,#275E65);text-align:center}.final .lede{color:rgba(255,255,255,.78);margin:18px auto 0}.final .btn{margin-top:27px}
+footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-inner div{max-width:680px}
+@media(max-width:980px){
+  .nav-links a:not(.btn){display:none}.hero-grid,.problem-grid,.deliver,.offer,.calc-shell{grid-template-columns:1fr}.hero-visual{max-width:720px}.problem-copy{position:static}.features{grid-template-columns:1fr 1fr}.requirements{grid-template-columns:1fr 1fr}.deliver .stack{order:2}.flow-top{grid-template-columns:1fr}
+}
+@media(max-width:680px){
+  .wrap,.narrow{width:min(100% - 28px,1160px)}section{padding:72px 0}.announcement{font-size:10px}.brand small{display:none}.nav-cta{font-size:11px}.hero{padding-top:62px}.hero-grid{gap:38px}.hero-actions .btn{width:100%}.float-card{display:none}.editor-body{grid-template-columns:68px 1fr}.toolrail{font-size:8px;padding-inline:5px}.workspace{padding:9px}.canvas-head{font-size:16px}.features,.modes,.fit-grid,.flow-demo{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.compare-arrow{transform:rotate(90deg);justify-self:center}.requirements{grid-template-columns:1fr}.offer{padding:27px}.flow-top{padding:25px}.flow-demo{padding:20px 25px 25px}.calc-shell{padding:22px}.stack{min-height:355px}.stack-screen{height:175px}.footer-inner{display:grid}.hero h1{font-size:clamp(46px,14vw,70px)}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="announcement">SEULAB · EDIÇÃO 01 &nbsp;•&nbsp; ACESSO IMEDIATO &nbsp;•&nbsp; PAGAMENTO ÚNICO</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#inicio"><img class="brand-logo" src="assets/seulab-mark.svg" alt="" aria-hidden="true"><span>SeuLab <small>BY PULSO LAB</small></span></a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#o-que-recebe">O que recebe</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn primary nav-cta" href="#oferta">Quero o SeuLab</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">Pulso Lab apresenta · Editor de Vídeos IA</div>
+      <h1>Edite vídeos com IA <span class="glow-text">sem virar editor de vídeo.</span></h1>
+      <p class="lede">O SeuLab é um fluxo guiado que transforma Claude Code ou Codex + Remotion em uma estação de edição: você descreve o resultado, a IA executa cortes, legendas, zooms, ritmo e exportação.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#oferta">Quero transformar meus vídeos →</a>
+        <a class="btn ghost" href="#como-funciona">Ver como funciona</a>
+      </div>
+      <div class="hero-proof"><span>Sem precisar programar</span><span>Windows e Mac</span><span>7 dias de garantia</span></div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="editor">
+        <div class="editor-bar"><div class="traffic"><i></i><i></i><i></i></div><span class="editor-name">SeuLab / reels-vendas-01</span><span class="live">● IA ativa</span></div>
+        <div class="editor-body">
+          <aside class="toolrail"><b>PROJETO</b><span class="on">▶ Preview</span><span>▤ Legendas</span><span>◇ Cortes</span><span>↗ Zoom</span><span>♫ Áudio</span><span>⬆ Exportar</span></aside>
+          <div class="workspace">
+            <div class="canvas"><span class="ratio">9:16 · REELS</span><div class="canvas-head">CONTEÚDO<br><b>QUE PRENDE</b></div><div class="person"></div><div class="caption">transforme um vídeo simples em <b>conteúdo profissional</b></div></div>
+            <div class="timeline"><div class="track"><span>V1</span><i style="width:82%"></i></div><div class="track"><span>TXT</span><i style="width:64%"></i></div><div class="track"><span>FX</span><i style="width:47%"></i></div><div class="playhead"></div></div>
+          </div>
+        </div>
+        <div class="prompt"><span class="spark">✦</span><b>Edite meu vídeo:</b> remova pausas, gere legendas e aplique zoom nos pontos de ênfase.<span class="prompt-go">→</span></div>
+      </div>
+      <div class="float-card one"><b>Legendas geradas</b><span class="status-ok">✓ 37 blocos sincronizados</span></div>
+      <div class="float-card two"><b>Exportação pronta</b><span>1080 × 1920 · H.264</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="compat">
+  <div class="wrap compat-inner"><span class="compat-label">Fluxo compatível com</span><span class="tech">Claude Code</span><span class="tech">Codex</span><span class="tech">Remotion</span><span class="tech">Windows</span><span class="tech">macOS</span></div>
+</div>
+
+<section>
+  <div class="wrap problem-grid">
+    <div class="problem-copy">
+      <div class="eyebrow">O problema não é gravar</div>
+      <h2>É tudo o que vem <span class="glow-text">depois.</span></h2>
+      <p class="lede">Um vídeo de 60 segundos pode virar horas de corte, legenda, ajuste e exportação. O SeuLab foi desenhado para tirar você da timeline e colocar a IA no trabalho operacional.</p>
+    </div>
+    <div class="problem-cards">
+      <article class="problem-card"><div class="iconbox">01</div><div><h3>Cortar silêncio por silêncio</h3><p>Você perde tempo procurando pausas, erros e trechos repetidos que poderiam ser identificados automaticamente.</p></div></article>
+      <article class="problem-card"><div class="iconbox">02</div><div><h3>Legendar e sincronizar</h3><p>Legenda boa exige ritmo, destaque e leitura. A parte repetitiva pode ser delegada para a IA.</p></div></article>
+      <article class="problem-card"><div class="iconbox">03</div><div><h3>Fazer o vídeo “ter ritmo”</h3><p>Zoom, títulos, cortes e efeitos precisam acontecer nos pontos certos — não aleatoriamente.</p></div></article>
+      <article class="problem-card"><div class="iconbox">04</div><div><h3>Aprender um software complexo</h3><p>Você não precisa dominar dezenas de painéis para conseguir publicar um vídeo profissional para as redes.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="transition">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow">A mudança de lógica</div>
+      <h2>De “como eu edito isso?” para <span class="glow-text">“é assim que eu quero”.</span></h2>
+      <p class="lede">O SeuLab transforma intenção em instrução. Você define o resultado; o agente de IA cuida da execução técnica dentro do fluxo.</p>
+    </div>
+    <div class="compare">
+      <article class="compare-card before"><span class="compare-tag">Antes</span><h3>Você opera cada detalhe</h3><ul class="compare-list"><li>Procura os trechos manualmente</li><li>Ajusta legenda bloco por bloco</li><li>Decide onde colocar zoom e corte</li><li>Repete o mesmo processo em cada vídeo</li><li>Depende de conhecer o editor</li></ul></article>
+      <div class="compare-arrow">→</div>
+      <article class="compare-card after"><span class="compare-tag">Com SeuLab</span><h3>Você dirige o resultado</h3><ul class="compare-list"><li>Descreve o objetivo em português</li><li>Usa prompts prontos e personalizáveis</li><li>A IA aplica a estrutura técnica</li><li>Revisa e pede ajustes em conversa</li><li>Exporta no formato da plataforma</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">O que você consegue pedir</div>
+      <h2>Uma linguagem de edição feita para <span class="glow-text">quem cria conteúdo.</span></h2>
+      <p class="lede">Não são botões mágicos: são instruções prontas para orientar a IA a executar tarefas concretas no seu projeto.</p>
+    </div>
+    <div class="features">
+      <article class="feature"><span class="feature-num">01 / CORTE</span><h3>Remova pausas e erros</h3><p>Peça para enxugar silêncios, tentativas repetidas e trechos que quebram o ritmo.</p><span class="mini">Vídeo mais direto</span></article>
+      <article class="feature"><span class="feature-num">02 / LEGENDA</span><h3>Crie legendas dinâmicas</h3><p>Gere blocos legíveis, com destaques nas palavras importantes e posicionamento pensado para vertical.</p><span class="mini">Mais leitura sem áudio</span></article>
+      <article class="feature"><span class="feature-num">03 / RITMO</span><h3>Aplique zooms de ênfase</h3><p>Use mudanças de escala nos pontos importantes para criar variação visual sem exagero.</p><span class="mini">Retenção visual</span></article>
+      <article class="feature"><span class="feature-num">04 / TEXTO</span><h3>Abra com um gancho</h3><p>Inclua títulos, chamadas e palavras-chave para contextualizar o vídeo nos primeiros segundos.</p><span class="mini">Clareza imediata</span></article>
+      <article class="feature"><span class="feature-num">05 / ÁUDIO</span><h3>Organize música e efeitos</h3><p>Defina trilha, volume e pequenos efeitos de transição sem ficar ajustando cada elemento na mão.</p><span class="mini">Acabamento</span></article>
+      <article class="feature"><span class="feature-num">06 / EXPORT</span><h3>Prepare para cada formato</h3><p>Oriente a saída para Reels, TikTok, Shorts, feed ou horizontal, conforme o projeto.</p><span class="mini">Pronto para publicar</span></article>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona">
+  <div class="wrap">
+    <div class="flow">
+      <div class="flow-top">
+        <div><div class="eyebrow">Como funciona na prática</div><h2 style="margin-top:15px">Você conversa. A IA <span class="glow-text">constrói.</span></h2></div>
+        <p class="lede">O guia conduz a instalação e entrega prompts estruturados. Depois da primeira configuração, o fluxo passa a ser repetível.</p>
+      </div>
+      <div class="flow-demo">
+        <article class="flow-step"><span class="step-n">PASSO 01</span><strong>Prepare</strong><span>Siga o guia visual para configurar Claude Code ou Codex e o ambiente do projeto.</span><div class="code-line"><b>✓</b> ambiente verificado<br><b>✓</b> Remotion configurado</div></article>
+        <article class="flow-step"><span class="step-n">PASSO 02</span><strong>Descreva</strong><span>Escolha um dos prompts prontos e diga como quer o vídeo.</span><div class="code-line">“corte pausas + <b>legenda dinâmica</b> + zoom nos trechos-chave”</div></article>
+        <article class="flow-step"><span class="step-n">PASSO 03</span><strong>Revise</strong><span>Abra a prévia, peça ajustes em conversa e exporte quando estiver do jeito que quer.</span><div class="code-line"><b>→</b> “deixe a legenda maior”<br><b>→</b> “acelere a abertura”</div></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow">Dois fluxos principais</div>
+      <h2>Comece com vídeo gravado ou <span class="glow-text">crie do zero.</span></h2>
+    </div>
+    <div class="modes">
+      <article class="mode"><div class="mode-label"><span class="mode-badge">A</span>Editar vídeo gravado</div><h3>Você grava. A IA monta.</h3><p>Ideal para Reels, Shorts, aulas curtas, vídeos de venda e conteúdo falando para a câmera.</p><ul><li>Cortes de pausas e erros</li><li>Legendas e destaques</li><li>Zooms e títulos</li><li>Música e efeitos</li><li>Exportação vertical ou horizontal</li></ul></article>
+      <article class="mode b"><div class="mode-label"><span class="mode-badge">B</span>Vídeo animado</div><h3>Você traz a ideia. A IA estrutura.</h3><p>Ideal para ofertas, explicações, anúncios, vídeos tipográficos e conteúdos em que você não quer aparecer.</p><ul><li>Estrutura de roteiro</li><li>Cenas e transições</li><li>Estilos visuais orientados</li><li>Textos animados</li><li>Modelo reaproveitável</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section id="o-que-recebe">
+  <div class="wrap deliver">
+    <div class="stack" aria-label="Mockup do conteúdo SeuLab">
+      <div class="stack-card"></div><div class="stack-card"></div>
+      <div class="stack-card"><div class="stack-brand"><img src="assets/seulab-mark.svg" alt="" aria-hidden="true" style="width:31px;height:31px;border-radius:9px">SeuLab · Editor de Vídeos IA</div><div class="stack-screen"></div></div>
+    </div>
+    <div>
+      <div class="eyebrow">O que você recebe</div>
+      <h2 style="margin-top:16px">O sistema completo para <span class="glow-text">começar sem improviso.</span></h2>
+      <p class="lede" style="margin-top:18px">O produto foi organizado para reduzir a parte técnica da primeira instalação e deixar os próximos vídeos muito mais repetíveis.</p>
+      <div class="deliver-list">
+        <div class="deliver-item"><i>01</i><div><b>Guia visual de instalação</b><span>Passo a passo para Windows e Mac, com o que fazer em cada etapa.</span></div></div>
+        <div class="deliver-item"><i>02</i><div><b>Prompt de instalação automática</b><span>Uma instrução estruturada para configurar, verificar e testar o ambiente.</span></div></div>
+        <div class="deliver-item"><i>A</i><div><b>Prompt de edição completa</b><span>Fluxo para vídeo gravado com escolhas de formato, legenda, zoom, música e efeitos.</span></div></div>
+        <div class="deliver-item"><i>B</i><div><b>Prompt de vídeo animado</b><span>Fluxo para construir peças animadas a partir da ideia e do objetivo.</span></div></div>
+        <div class="deliver-item"><i>16</i><div><b>Ajustes rápidos</b><span>Comandos prontos como “legenda maior”, “corte mais rápido” e “troque a cor”.</span></div></div>
+        <div class="deliver-item"><i>?</i><div><b>Prompt de socorro</b><span>Para diagnosticar o que travou e pedir uma correção explicada em português.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Faça a conta</div>
+      <h2>Quanto tempo a edição <span class="glow-text">consome hoje?</span></h2>
+      <p class="lede">Use seus próprios números. É apenas uma estimativa de planejamento, não uma promessa de economia.</p>
+    </div>
+    <div class="calc-shell">
+      <div class="calc-fields">
+        <div class="field"><label for="videos">Vídeos por mês</label><input id="videos" type="number" min="1" max="200" value="8"></div>
+        <div class="field"><label for="horas">Horas gastas por vídeo hoje</label><input id="horas" type="number" min=".5" max="60" step=".5" value="3"></div>
+        <div class="field"><label for="meta">Meta de tempo por vídeo com o novo fluxo</label><input id="meta" type="number" min=".25" max="20" step=".25" value="1"></div>
+      </div>
+      <div class="calc-result" aria-live="polite"><div><span class="calc-kicker">Tempo potencialmente liberado / mês</span><div class="calc-big" id="saved">16 h</div></div><div class="calc-sub">A conta compara o tempo informado por você. O resultado real varia conforme duração, complexidade, computador e nível de revisão.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow">Para quem faz sentido</div>
+      <h2>SeuLab não precisa ser <span class="glow-text">para todo mundo.</span></h2>
+    </div>
+    <div class="fit-grid">
+      <article class="fit-card yes"><h3>É para você se…</h3><ul><li>Cria conteúdo para Instagram, TikTok ou YouTube</li><li>Quer reduzir trabalho operacional de edição</li><li>Gosta da ideia de orientar a IA por texto</li><li>Tem computador Windows ou Mac</li><li>Topa seguir um passo a passo na primeira configuração</li></ul></article>
+      <article class="fit-card no"><h3>Talvez não seja se…</h3><ul><li>Quer um app de celular pronto de arrastar e soltar</li><li>Não quer usar Claude Code ou Codex</li><li>Precisa de pós-produção cinematográfica complexa</li><li>Não quer fazer nenhuma configuração inicial</li><li>Espera resultado de audiência garantido só pela ferramenta</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Transparência antes da compra</div>
+      <h2>O que você precisa ter.</h2>
+    </div>
+    <div class="requirements">
+      <div class="req"><b>Computador</b><span>Windows ou Mac. O fluxo não roda apenas pelo celular.</span></div>
+      <div class="req"><b>Acesso a uma IA compatível</b><span>Claude Code ou Codex conforme o caminho escolhido no guia.</span></div>
+      <div class="req"><b>Internet</b><span>Necessária para configuração, agentes e downloads do ambiente.</span></div>
+      <div class="req"><b>Licença adequada do Remotion</b><span>Indivíduos e equipes pequenas podem se enquadrar na licença gratuita; confira os termos atuais.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="oferta">
+  <div class="wrap offer-wrap">
+    <div class="offer">
+      <div>
+        <div class="eyebrow">SeuLab · Edição 01</div>
+        <h2 style="margin-top:15px">Da ideia ao vídeo pronto com um <span class="glow-text">fluxo que você repete.</span></h2>
+        <ul class="offer-list">
+          <li>Guia visual de instalação para Windows e Mac</li>
+          <li>Prompt de instalação e teste</li>
+          <li>Fluxo A: edição completa de vídeo gravado</li>
+          <li>Fluxo B: criação de vídeo animado</li>
+          <li>16 comandos de ajuste rápido</li>
+          <li>Prompt de socorro para diagnóstico</li>
+          <li>Acesso imediato aos arquivos desta edição</li>
+        </ul>
+      </div>
+      <div class="pricebox">
+        <span class="old">De R$ 197</span>
+        <div class="price"><small>R$</small>97</div>
+        <div class="once">pagamento único · acesso imediato</div>
+        <!-- Link de checkout da oferta SeuLab na Cakto. Atualize CHECKOUT_URL no script no final da página. -->
+        <a class="btn primary" href="#oferta" data-checkout>Quero acessar o SeuLab →</a>
+        <div class="micro"><span>Pix ou cartão</span><span>7 dias de garantia</span></div>
+      </div>
+    </div>
+    <div class="guarantee"><div class="seal">7<small>DIAS</small></div><p><b>Garantia de 7 dias.</b> Você pode acessar o material, avaliar o fluxo e solicitar reembolso dentro do prazo aplicável caso decida que o produto não faz sentido para você.</p></div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:50px">
+  <div class="narrow">
+    <div class="section-head"><div class="eyebrow">Perguntas frequentes</div><h2>Antes de começar.</h2></div>
+    <div class="faq">
+      <details><summary>Eu preciso saber programar?</summary><p>Não é necessário dominar programação. A proposta é seguir o guia e usar instruções prontas. Ainda assim, você estará configurando ferramentas no computador, então precisa estar confortável em seguir passos técnicos simples.</p></details>
+      <details><summary>Isso é um aplicativo de edição próprio?</summary><p>Não. O SeuLab é um sistema guiado de implementação e prompts que usa ferramentas como Claude Code ou Codex em conjunto com Remotion. A página mostra visualmente o tipo de fluxo e resultado que você vai construir.</p></details>
+      <details><summary>Funciona no Windows e no Mac?</summary><p>O guia foi organizado para os dois sistemas. Algumas telas e comandos podem variar conforme atualizações das ferramentas.</p></details>
+      <details><summary>Posso editar vídeos para clientes?</summary><p>O fluxo pode ser usado em projetos comerciais, desde que você tenha as licenças adequadas das ferramentas utilizadas e respeite os termos de cada serviço.</p></details>
+      <details><summary>O Remotion é gratuito?</summary><p>A política de licenciamento pode variar por tipo e tamanho de organização. Consulte a licença oficial vigente do Remotion antes do uso comercial.</p></details>
+      <details><summary>Quanto tempo demora o primeiro vídeo?</summary><p>A primeira configuração tende a levar mais tempo porque inclui instalação e testes. Os projetos seguintes aproveitam o ambiente já preparado. O tempo de renderização depende do vídeo e do computador.</p></details>
+      <details><summary>O SeuLab garante mais visualizações ou vendas?</summary><p>Não. Ele ajuda no fluxo de produção e edição. Resultado de audiência ou vendas depende de conteúdo, oferta, distribuição, posicionamento e outros fatores.</p></details>
+      <details><summary>E se eu travar?</summary><p>O produto inclui um prompt de diagnóstico pensado para explicar o problema e orientar a correção de forma mais clara.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="narrow">
+    <div class="eyebrow" style="color:#CBFFF9">PULSO LAB · SEULAB</div>
+    <h2 style="margin-top:16px">Pare de aprender a ferramenta.<br>Comece a dirigir o resultado.</h2>
+    <p class="lede">Transforme seu computador em um fluxo de edição assistido por IA e publique com mais consistência.</p>
+    <a class="btn white" href="#oferta">Quero conhecer o SeuLab →</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>SeuLab · Editor de Vídeos IA · desenvolvido pela Pulso Lab · 2026<br>Produto independente. Não é afiliado ao Remotion, Anthropic ou OpenAI. Marcas citadas pertencem aos respectivos titulares.</div>
+    <div>Design system: Pulso Violet + AI Cyan</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const videos=document.getElementById('videos');
+  const horas=document.getElementById('horas');
+  const meta=document.getElementById('meta');
+  const saved=document.getElementById('saved');
+  function calc(){
+    const v=Math.max(0,Math.min(200,Number(videos.value)||0));
+    const h=Math.max(0,Math.min(60,Number(horas.value)||0));
+    const m=Math.max(0,Math.min(20,Number(meta.value)||0));
+    const s=Math.max(0,v*(h-m));
+    saved.textContent=(Math.round(s*10)/10).toLocaleString('pt-BR')+' h';
+  }
+  [videos,horas,meta].forEach(el=>el.addEventListener('input',calc));
+  calc();
+})();
+</script>
+
+<script>
+(function(){
+  // Link de checkout da oferta SeuLab na Cakto. Substitua quando a oferta estiver criada.
+  var CHECKOUT_URL = "https://pay.cakto.com.br/c2ebywp_1190788";
+  document.querySelectorAll('[data-checkout]').forEach(function(a){ a.href = CHECKOUT_URL; });
+})();
+</script>
+</body>
+</html>

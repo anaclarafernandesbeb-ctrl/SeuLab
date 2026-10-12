@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SeuLab &middot; Guia v1 | Pulso Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: uma "ilha de edição" — régua de timecode no topo, seções marcadas como pontos da linha do tempo, conteúdo em coluna larga */
+:root{
+  --bg:#F3F4F8; --surface:#FFFFFF; --ink:#15172B; --muted:#5A5E77; --line:#DADDE8;
+  --accent:#3B33E0; --accent-ink:#FFFFFF; --accent-soft:#E8E7FF;
+  --amber:#C97A00; --amber-bg:#FFE7B8; --amber-soft:#FFF4DE;
+  --track:#E9EBF3; --ok:#18804F; --ok-soft:#DDF3E8;
+  --shadow:0 1px 2px rgba(21,23,43,.06),0 8px 24px rgba(21,23,43,.06);
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0F1D; --surface:#171930; --ink:#ECEDF7; --muted:#A3A7C2; --line:#2B2E4C;
+  --accent:#8F89FF; --accent-ink:#0E0F1D; --accent-soft:#25244D;
+  --amber:#F4B851; --amber-bg:#4A3916; --amber-soft:#2A2316;
+  --track:#1E2039; --ok:#55C792; --ok-soft:#173327;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E0F1D; --surface:#171930; --ink:#ECEDF7; --muted:#A3A7C2; --line:#2B2E4C;
+  --accent:#8F89FF; --accent-ink:#0E0F1D; --accent-soft:#25244D;
+  --amber:#F4B851; --amber-bg:#4A3916; --amber-soft:#2A2316;
+  --track:#1E2039; --ok:#55C792; --ok-soft:#173327;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.05}
+h2{font-size:clamp(30px,4.4vw,46px);font-stretch:118%;font-weight:800;letter-spacing:-.01em}
+h3{font-size:21px;font-stretch:105%;font-weight:700;line-height:1.2}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch;font-size:18px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* Barra superior */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.brand{font-family:var(--f-display);font-weight:800;font-stretch:120%;font-size:15px;white-space:nowrap;letter-spacing:.01em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.rec{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.toc{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.toc::-webkit-scrollbar{display:none}
+.toc a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.toc a:hover,.toc a.on{background:var(--accent-soft);color:var(--accent)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--accent);width:0}
+
+/* Hero */
+.hero{padding-block:64px 40px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow b{color:var(--accent);font-weight:600}
+.hero h1{font-size:clamp(44px,7vw,84px);font-stretch:125%;font-weight:900;letter-spacing:-.02em;margin-top:18px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{margin-top:22px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{font:600 16px var(--f-body);padding:13px 22px;border-radius:12px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{transform:translateY(-1px)}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:38px;padding-top:24px;border-top:1px solid var(--line)}
+.facts div{display:flex;flex-direction:column}
+.facts strong{font-family:var(--f-display);font-size:30px;font-stretch:120%;font-weight:800;line-height:1}
+.facts span{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* Monitor + timeline do hero */
+.monitor{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.monitor-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.tc{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.screen{aspect-ratio:16/9;max-width:100%;position:relative;background:linear-gradient(135deg,#3B33E0 0%,#7B3FA8 55%,#C97A00 100%);display:grid;place-items:center;overflow:hidden}
+.screen .safe{position:absolute;inset:8%;border:1px dashed rgba(255,255,255,.35);border-radius:6px}
+.scene-title{font-family:var(--f-display);font-stretch:125%;font-weight:900;color:#fff;font-size:clamp(22px,3.4vw,38px);text-align:center;line-height:1.05;padding:0 12%;text-shadow:0 2px 20px rgba(0,0,0,.2)}
+.scene-title mark{background:none;color:#fff;position:relative;white-space:nowrap}
+.scene-title mark::after{content:"";position:absolute;left:-4px;right:-4px;bottom:.06em;height:.36em;background:#FFD166;z-index:-1;border-radius:3px;transform-origin:left;animation:hl 4s ease-in-out infinite}
+.scene-title mark{z-index:0;isolation:isolate}
+@keyframes hl{0%,15%{transform:scaleX(0)}35%,85%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.caption{position:absolute;bottom:11%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-weight:600;font-size:13px;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.timeline{padding:12px 14px 14px;display:grid;gap:6px;position:relative}
+.ruler{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10px;color:var(--muted);padding-left:74px;font-variant-numeric:tabular-nums}
+.trk{display:grid;grid-template-columns:68px 1fr;gap:6px;align-items:center}
+.trk label{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.lane{height:22px;background:var(--track);border-radius:5px;position:relative}
+.clip{position:absolute;top:2px;bottom:2px;border-radius:4px;font-size:10.5px;font-weight:600;padding:0 6px;display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+.c-a{background:var(--accent);color:var(--accent-ink)}
+.c-b{background:var(--amber-bg);color:var(--ink)}
+.c-c{background:var(--ok-soft);color:var(--ok)}
+.playhead{position:absolute;top:8px;bottom:8px;width:2px;background:var(--amber);left:calc(14px + 74px);animation:play 6s linear infinite;pointer-events:none}
+.playhead::before{content:"";position:absolute;top:-2px;left:-5px;border:6px solid transparent;border-top-color:var(--amber)}
+@keyframes play{from{left:calc(14px + 74px)}to{left:calc(100% - 16px)}}
+
+/* Seções */
+section.block{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:14px;margin-bottom:36px}
+.mark{font-family:var(--f-mono);font-size:12.5px;color:var(--accent);letter-spacing:.06em;font-weight:600;font-variant-numeric:tabular-nums}
+.mark span{color:var(--muted);font-weight:400}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;min-width:0}
+.persona .who{font-family:var(--f-mono);font-size:12px;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.persona p{color:var(--muted);margin-top:10px;font-size:16px}
+.persona ul{margin:14px 0 0;padding-left:18px;font-size:15px}
+
+/* Diagnóstico */
+.quiz{display:grid;gap:22px}
+.q legend{font-weight:700;font-size:17px;margin-bottom:10px;padding:0}
+.q{border:0;margin:0;padding:0;min-width:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-block;padding:10px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-size:15px;font-weight:500}
+.opt input:checked+span{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.opt input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.verdict{margin-top:6px;background:var(--ink);color:var(--bg);border-radius:16px;padding:24px;display:grid;gap:10px}
+.verdict .mark{color:var(--amber)}
+.verdict h3{font-size:24px}
+.verdict p{opacity:.85;font-size:16px}
+.verdict .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.verdict a{color:var(--bg);background:color-mix(in srgb,var(--bg) 16%,transparent);padding:6px 12px;border-radius:999px;font-size:14px;text-decoration:none;font-weight:600}
+
+/* Calculadora */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
+.field{display:grid;gap:6px}
+.field label{font-weight:600;font-size:15px}
+.field small{color:var(--muted);font-size:13px}
+.field input,.field select,.field textarea{font:500 16px var(--f-body);padding:11px 13px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);outline:none}
+.calc .inputs{display:grid;gap:16px}
+.result{background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.result .big{font-family:var(--f-display);font-stretch:125%;font-weight:900;font-size:clamp(46px,6vw,72px);line-height:1;font-variant-numeric:tabular-nums}
+.result .lbl{font-size:15px;opacity:.85}
+.result .row{display:flex;gap:32px;flex-wrap:wrap}
+.result .note{font-size:13px;opacity:.8;border-top:1px solid color-mix(in srgb,var(--accent-ink) 30%,transparent);padding-top:14px}
+
+/* Antes x depois */
+.ba{width:100%;border-collapse:separate;border-spacing:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:16px}
+.ba th,.ba td{padding:16px 20px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.ba tr:last-child td{border-bottom:0}
+.ba thead th{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--bg)}
+.ba thead th.now{color:var(--accent)}
+.ba td:first-child{font-weight:700;width:18%}
+.ba td.old{color:var(--muted)}
+.ba td.new{background:var(--accent-soft);font-weight:500}
+.table-scroll{overflow-x:auto;border-radius:16px}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.steps-mini{margin:12px 0 0;padding-left:20px;display:grid;gap:6px;font-size:16px}
+.story{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.frame{aspect-ratio:9/16;max-width:100%;border-radius:10px;padding:10px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;font-family:var(--f-display);font-stretch:115%;font-weight:800;font-size:clamp(11px,1.3vw,14px);line-height:1.1;background:#2A2550}
+.frame:nth-child(2){background:#3B33E0}.frame:nth-child(3){background:#7A4B12}.frame:nth-child(4){background:#15172B}
+.frame small{font-family:var(--f-mono);font-weight:400;font-size:10px;opacity:.75;font-stretch:100%}
+.tag-ex{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:10px}
+
+/* Código e cópia */
+.code{position:relative;background:var(--ink);color:var(--bg);border-radius:12px;padding:16px 16px 16px;font-family:var(--f-mono);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;margin:0;min-width:0}
+.code-wrap{position:relative;min-width:0}
+.copy{position:absolute;top:10px;right:10px;font:600 12.5px var(--f-body);background:var(--amber);color:#15172B;border:0;border-radius:8px;padding:6px 12px;cursor:pointer}
+.copy.done{background:var(--ok);color:#fff}
+.code-wrap .code{padding-right:92px}
+
+/* Instalação */
+.path{display:grid;gap:18px}
+.path-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{font:600 12px var(--f-mono);padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+.pill.easy{background:var(--ok-soft);color:var(--ok)}
+.pill.man{background:var(--track);color:var(--muted)}
+.pill.test{background:var(--amber-soft);color:var(--amber)}
+.req{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.req span{font-size:14px;background:var(--track);padding:6px 12px;border-radius:8px}
+ol.manual{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+ol.manual>li{display:grid;grid-template-columns:44px 1fr;gap:14px;counter-increment:s}
+ol.manual>li::before{content:counter(s);font-family:var(--f-display);font-weight:800;font-stretch:120%;font-size:20px;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+ol.manual>li>div{min-width:0;display:grid;gap:8px}
+ol.manual p{color:var(--muted);font-size:16px}
+.screen-note{font-size:14px;border-left:3px solid var(--amber);padding:4px 0 4px 12px;color:var(--ink)}
+.okbad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.okbad div{border-radius:12px;padding:14px 16px;font-size:15px}
+.okbad .y{background:var(--ok-soft)}
+.okbad .n{background:var(--amber-soft)}
+.okbad b{display:block;margin-bottom:4px}
+
+/* Receitas */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.filters button{font:600 14px var(--f-body);padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.recipes{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.recipe{display:flex;flex-direction:column;gap:14px;scroll-margin-top:80px;transition:box-shadow .3s}
+.recipe.flash{box-shadow:0 0 0 3px var(--accent)}
+.recipe.pick{border-color:var(--accent)}
+.r-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lvl{font:600 11.5px var(--f-mono);text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:6px}
+.lvl.l1{background:var(--ok-soft);color:var(--ok)}
+.lvl.l2{background:var(--amber-soft);color:var(--amber)}
+.lvl.l3{background:var(--accent-soft);color:var(--accent)}
+.time{font:500 12px var(--f-mono);color:var(--muted)}
+.foryou{font:700 11.5px var(--f-body);background:var(--accent);color:var(--accent-ink);padding:3px 9px;border-radius:6px;margin-left:auto}
+.recipe .why{color:var(--muted);font-size:15.5px}
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--bg);border-radius:12px;padding:14px}
+.builder .field label{font-size:13px}
+.builder .field input,.builder .field select{font-size:14.5px;padding:8px 10px;background:var(--surface)}
+.builder .full{grid-column:1/-1}
+.builder-title{grid-column:1/-1;font:600 12px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.out{display:grid;gap:8px;font-size:15px}
+.out div{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.out .ic{font-weight:700;color:var(--accent)}
+.out .warn .ic{color:var(--amber)}
+.recipe .code{font-size:13.5px}
+
+/* Fluxos */
+.flows{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.flow h3{margin-bottom:6px}
+.flow .time{display:block;margin-bottom:14px}
+.flow-steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.flow-steps a{font-size:14px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--track);padding:7px 12px;border-radius:8px}
+.flow-steps a:hover{background:var(--accent-soft);color:var(--accent)}
+.flow-steps .arr{color:var(--muted);font-family:var(--f-mono)}
+.flow p{color:var(--muted);font-size:15px;margin-top:14px}
+
+/* Trilha */
+.trail{display:grid;gap:10px}
+.day{display:grid;grid-template-columns:auto 76px 1fr;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;cursor:pointer}
+.day input{width:22px;height:22px;accent-color:var(--accent)}
+.day .d{font:600 13px var(--f-mono);color:var(--accent);text-transform:uppercase}
+.day b{display:block}
+.day small{color:var(--muted);font-size:14.5px}
+.day:has(input:checked){background:var(--ok-soft);border-color:transparent}
+.day:has(input:checked) b{text-decoration:line-through;text-decoration-color:var(--ok)}
+.trail-bar{display:flex;align-items:center;gap:14px;margin-bottom:16px;font-weight:600}
+.trail-bar .bar{flex:1;height:10px;background:var(--track);border-radius:99px;overflow:hidden}
+.trail-bar .fill{height:100%;background:var(--ok);width:0;transition:width .4s}
+
+/* Transparência */
+.facts-sheet{display:grid;grid-template-columns:repeat(2,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.facts-sheet>div{padding:22px 24px;border-bottom:1px solid var(--line);min-width:0}
+.facts-sheet>div:nth-child(odd){border-right:1px solid var(--line)}
+.facts-sheet h3{font-size:17px;margin-bottom:8px}
+.facts-sheet p,.facts-sheet li{font-size:15.5px;color:var(--muted)}
+.facts-sheet ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.facts-sheet .wide{grid-column:1/-1;border-right:0!important;background:var(--bg)}
+
+/* FAQ */
+.faq{display:grid;gap:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 20px}
+summary{cursor:pointer;font-weight:700;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--f-mono);color:var(--accent);font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{padding-bottom:16px;color:var(--muted);font-size:16px}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.gloss div{padding:16px 16px 16px 0;border-bottom:1px solid var(--line)}
+.gloss dt{font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--accent)}
+.gloss dd{margin:4px 0 0;font-size:15px;color:var(--muted)}
+
+/* Cartão de bolso */
+.pocket{background:var(--ink);color:var(--bg);border-radius:20px;padding:32px}
+.pocket h2{color:var(--bg)}
+.pocket .lede{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.pocket-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px;counter-reset:p}
+.pk{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;background:color-mix(in srgb,var(--bg) 8%,transparent);border-radius:10px;padding:12px 14px;counter-increment:p}
+.pk::before{content:counter(p,decimal-leading-zero);font:600 13px var(--f-mono);color:var(--amber)}
+.pk code{font-family:var(--f-mono);font-size:13px;line-height:1.5;word-break:break-word;min-width:0}
+.pk button{font:600 12px var(--f-body);border:0;border-radius:6px;padding:4px 9px;background:var(--amber);color:#15172B;cursor:pointer}
+.pk button.done{background:var(--ok);color:#fff}
+.pocket .ctas{margin-top:22px}
+.pocket .btn{border-color:var(--bg);color:var(--bg)}
+.pocket .btn.primary{background:var(--amber);border-color:var(--amber);color:#15172B}
+
+footer{padding-block:40px 60px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .hero-grid,.calc,.demo{grid-template-columns:1fr}
+  .grid3,.recipes,.flows,.grid2{grid-template-columns:1fr}
+  .gloss{grid-template-columns:1fr 1fr}
+  .pocket-grid{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .hero{padding-block:40px 28px}
+  section.block{padding-block:52px}
+  .builder,.okbad,.facts-sheet{grid-template-columns:1fr}
+  .facts-sheet>div:nth-child(odd){border-right:0}
+  .gloss{grid-template-columns:1fr}
+  .story{grid-template-columns:repeat(2,1fr)}
+  .day{grid-template-columns:auto 1fr}
+  .day .d{display:none}
+  .pocket{padding:24px 18px}
+  .brand .full{display:none}
+}
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#inicio"><span class="rec" aria-hidden="true"></span>SeuLab<span class="full">&nbsp;&middot; Guia</span></a>
+    <nav class="toc" aria-label="Seções">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#economia">Economia</a>
+      <a href="#instalar">Instalar</a>
+      <a href="#receitas">Receitas</a>
+      <a href="#fluxos">Fluxos</a>
+      <a href="#trilha">7 dias</a>
+      <a href="#transparencia">Transparência</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a href="#bolso">Cartão de bolso</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+<!-- CAPA -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><b>Coleção Guias de IA · Edição 01</b><span>Remotion Agent Skills · Claude Code e Codex</span></div>
+      <h1>Vídeos de agência, feitos numa <em>conversa.</em></h1>
+      <p class="lede">Você descreve o vídeo em português. A IA monta as cenas, abre a prévia no seu navegador e ajusta o que você pedir. No final, você exporta em MP4. Sem After Effects e sem saber programar.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#instalar">Começar a instalação</a>
+        <a class="btn" href="#receitas">Ver as 12 receitas</a>
+      </div>
+      <div class="facts">
+        <div><strong>12</strong><span>habilidades de vídeo</span></div>
+        <div><strong>12</strong><span>receitas prontas</span></div>
+        <div><strong>4</strong><span>fluxos completos</span></div>
+        <div><strong>7</strong><span>dias de trilha</span></div>
+      </div>
+    </div>
+    <div class="monitor" aria-label="Ilustração: prévia de um vídeo sendo montado na linha do tempo">
+      <div class="monitor-head"><span>Remotion Studio · prévia</span><span class="tc" id="tc">00:00:00:00</span></div>
+      <div class="screen">
+        <div class="safe" aria-hidden="true"></div>
+        <div class="scene-title">Seu produto,<br><mark>em movimento</mark></div>
+        <div class="caption">legenda automática ✓</div>
+      </div>
+      <div class="timeline" aria-hidden="true">
+        <div class="ruler"><span>0s</span><span>2s</span><span>4s</span><span>6s</span><span>8s</span></div>
+        <div class="trk"><label>Cenas</label><div class="lane"><div class="clip c-a" style="left:0;width:30%">Gancho</div><div class="clip c-a" style="left:31%;width:34%">Produto</div><div class="clip c-a" style="left:66%;width:34%">Chamada</div></div></div>
+        <div class="trk"><label>Legenda</label><div class="lane"><div class="clip c-c" style="left:4%;width:58%">transcrição</div><div class="clip c-c" style="left:68%;width:28%">CTA</div></div></div>
+        <div class="trk"><label>Voz</label><div class="lane"><div class="clip c-b" style="left:2%;width:90%">locução IA</div></div></div>
+        <div class="trk"><label>Efeitos</label><div class="lane"><div class="clip c-b" style="left:29%;width:6%">♪</div><div class="clip c-b" style="left:64%;width:6%">♪</div></div></div>
+        <div class="playhead"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUEM É -->
+<section class="block" id="para-quem">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:01 <span>· Para quem é</span></div>
+      <h2>Feito para quem precisa de vídeo toda semana</h2>
+      <p class="lede">Se vídeo é parte do seu trabalho e você depende de outra pessoa para fazer, este kit muda a sua rotina.</p>
+    </div>
+    <div class="grid3">
+      <article class="card persona">
+        <div class="who">Quem vende</div>
+        <h3>Empreendedora que vende pelo Instagram</h3>
+        <p>Precisa mostrar produto, oferta e lançamento sem esperar dias por um editor.</p>
+        <ul><li>Vídeos de produto e promoção</li><li>Capa do Reels no mesmo visual</li><li>Locução sem gravar a própria voz</li></ul>
+      </article>
+      <article class="card persona">
+        <div class="who">Quem ensina</div>
+        <h3>Criadora de conteúdo, mentora ou professora</h3>
+        <p>Grava muito e perde horas cortando pausas e colocando legenda.</p>
+        <ul><li>Cortes automáticos de silêncio</li><li>Legendas a partir do áudio</li><li>Podcast vira vídeo para as redes</li></ul>
+      </article>
+      <article class="card persona">
+        <div class="who">Quem atende clientes</div>
+        <h3>Social media e pequenas agências</h3>
+        <p>Quer entregar mais vídeos por cliente sem contratar um motion designer.</p>
+        <ul><li>Modelos de vídeo reutilizáveis por marca</li><li>Ajustes rápidos durante a aprovação</li><li>Mapas e animações para explicar serviços</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO -->
+<section class="block" id="diagnostico">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:02 <span>· Diagnóstico rápido</span></div>
+      <h2>Três perguntas para saber por onde começar</h2>
+      <p class="lede">Responda e o guia marca as receitas certas para você com o selo <b>Indicado para você</b>.</p>
+    </div>
+    <form class="quiz" id="quiz">
+      <fieldset class="q">
+        <legend>1. Qual é o seu objetivo principal com vídeo?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" id="q1a" value="vender" checked><span>Vender um produto ou serviço</span></label>
+          <label class="opt"><input type="radio" name="q1" id="q1b" value="conteudo"><span>Postar conteúdo nas redes</span></label>
+          <label class="opt"><input type="radio" name="q1" id="q1c" value="aulas"><span>Ensinar, fazer aulas ou podcast</span></label>
+          <label class="opt"><input type="radio" name="q1" id="q1d" value="lugares"><span>Mostrar lugares, rotas ou entregas</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q">
+        <legend>2. O que você já tem em mãos?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2" id="q2a" value="ideia" checked><span>Só a ideia e alguns textos</span></label>
+          <label class="opt"><input type="radio" name="q2" id="q2b" value="gravado"><span>Vídeos que eu mesma gravei</span></label>
+          <label class="opt"><input type="radio" name="q2" id="q2c" value="audio"><span>Um áudio ou podcast</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="q">
+        <legend>3. Qual é a sua experiência com tecnologia?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" id="q3a" value="iniciante" checked><span>Nunca abri o terminal</span></label>
+          <label class="opt"><input type="radio" name="q3" id="q3b" value="pratica"><span>Já instalei alguma coisa sozinha</span></label>
+        </div>
+      </fieldset>
+      <div class="verdict" id="verdict" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="block" id="economia">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:03 <span>· Calculadora de economia</span></div>
+      <h2>Quanto tempo e dinheiro você recupera</h2>
+      <p class="lede">Coloque os seus números. A conta usa uma estimativa conservadora de 1 hora por vídeo com o kit, contando pedido, revisão e exportação.</p>
+    </div>
+    <div class="calc">
+      <div class="card inputs">
+        <div class="field"><label for="c-videos">Vídeos por mês</label><input id="c-videos" type="number" min="1" max="200" value="8" inputmode="numeric"></div>
+        <div class="field"><label for="c-horas">Horas por vídeo hoje</label><input id="c-horas" type="number" min="1" max="60" step="0.5" value="4" inputmode="decimal"><small>Somando briefing, edição e revisões, seu ou de quem você contrata.</small></div>
+        <div class="field"><label for="c-valor">Quanto vale 1 hora de edição (R$)</label><input id="c-valor" type="number" min="10" max="1000" step="5" value="80" inputmode="numeric"><small>O valor de um freelancer ou da sua própria hora de trabalho.</small></div>
+      </div>
+      <div class="result" aria-live="polite">
+        <div>
+          <div class="lbl">Você recupera por mês</div>
+          <div class="big" id="r-horas">24 h</div>
+        </div>
+        <div class="row">
+          <div><div class="lbl">Economia mensal</div><div class="big" style="font-size:clamp(30px,3.6vw,42px)" id="r-mes">R$ 1.920</div></div>
+          <div><div class="lbl">Em um ano</div><div class="big" style="font-size:clamp(30px,3.6vw,42px)" id="r-ano">R$ 23.040</div></div>
+        </div>
+        <div class="note">Estimativa para planejamento, não é garantia. Vídeos longos ou muito complexos podem pedir mais rodadas de ajuste.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANTES X DEPOIS -->
+<section class="block" id="antes-depois">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:04 <span>· Antes x depois</span></div>
+      <h2>O mesmo vídeo, dois caminhos</h2>
+    </div>
+    <div class="table-scroll">
+      <table class="ba">
+        <thead><tr><th></th><th>Sem o kit</th><th class="now">Com o kit</th></tr></thead>
+        <tbody>
+          <tr><td>Quem faz</td><td class="old">Um motion designer ou editor de vídeo</td><td class="new">Você, conversando com a IA</td></tr>
+          <tr><td>Ferramenta</td><td class="old">After Effects ou Premiere, com licença e meses de prática</td><td class="new">Claude Code ou Codex + as habilidades do Remotion</td></tr>
+          <tr><td>Primeira versão</td><td class="old">De 2 a 5 dias, com briefing e fila de espera</td><td class="new">Minutos, com prévia ao vivo no navegador</td></tr>
+          <tr><td>Ajustes</td><td class="old">Nova rodada de revisão, nova espera</td><td class="new">"Deixe o título maior" e a prévia muda na hora</td></tr>
+          <tr><td>Próximo vídeo</td><td class="old">Começa do zero</td><td class="new">Reaproveita o seu modelo, troca só o texto</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="demo">
+      <div class="card">
+        <div class="mark">Você digita</div>
+        <div class="code-wrap" style="margin-top:12px">
+          <pre class="code" id="demo-prompt">/remotion-create Crie um vídeo vertical de 12 segundos para minha loja de velas aromáticas. Gancho forte, o produto em destaque e a chamada "Peça pelo direct". Cores terrosas.</pre>
+          <button class="copy" type="button" data-copy="demo-prompt">Copiar</button>
+        </div>
+        <ol class="steps-mini">
+          <li>A IA cria a pasta do projeto no seu computador.</li>
+          <li>Abre o Remotion Studio no navegador, já com a prévia.</li>
+          <li>Monta as cenas enquanto você assiste.</li>
+          <li>Você pede ajustes em português.</li>
+          <li>Você pede para exportar e recebe o arquivo MP4.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <div class="mark">O que sai</div>
+        <div class="story" aria-label="Storyboard ilustrativo de 4 cenas">
+          <div class="frame"><small>0s</small>Sua casa sem cheiro de casa?</div>
+          <div class="frame"><small>3s</small>Velas de soja, feitas à mão</div>
+          <div class="frame"><small>6s</small>Lavanda · Café · Alecrim</div>
+          <div class="frame"><small>9s</small>Peça pelo direct →</div>
+        </div>
+        <p class="tag-ex">Storyboard ilustrativo. O resultado real varia conforme o seu pedido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALAÇÃO -->
+<section class="block" id="instalar">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:05 <span>· Instalação</span></div>
+      <h2>Do zero à primeira prévia</h2>
+      <p class="lede">Escolha o caminho fácil, em que a IA instala tudo por você, ou siga o passo a passo manual. Os dois terminam no teste "Funcionou?".</p>
+      <div class="req">
+        <span>Computador Mac, Windows ou Linux</span><span>Claude Code ou Codex instalado</span><span>Node.js (gratuito)</span><span>Git (gratuito)</span><span>Internet</span>
+      </div>
+    </div>
+
+    <div class="path">
+      <div class="card">
+        <div class="path-head"><span class="pill easy">Caminho fácil</span><h3>Um prompt que instala, configura e testa</h3></div>
+        <p class="lede" style="margin:10px 0 16px;font-size:16px">Crie uma pasta vazia chamada <b>meus-videos</b>, abra o Claude Code ou o Codex dentro dela e cole:</p>
+        <div class="code-wrap">
+<pre class="code" id="p-faztudo">Quero usar o Remotion Agent Skills para criar vídeos. Eu não sei programar, então me guie em português, um passo de cada vez, e explique o que está acontecendo.
+
+1. Verifique se o Node.js e o Git estão instalados. Se faltar algum, me diga exatamente como instalar no meu sistema e espere eu confirmar.
+2. Instale as habilidades com o comando: npx skills add remotion-dev/skills
+3. Crie um projeto de vídeo de teste nesta pasta.
+4. Faça um vídeo de 5 segundos com o texto "Meu primeiro vídeo" em letras grandes.
+5. Abra o Remotion Studio para eu ver a prévia no navegador.
+6. No final, me diga o que deu certo e qual é o próximo passo.</pre>
+          <button class="copy" type="button" data-copy="p-faztudo">Copiar</button>
+        </div>
+        <p class="screen-note" style="margin-top:14px">Na tela: a IA vai pedir permissão antes de rodar cada comando. Leia e aprove. Na primeira vez, a instalação leva alguns minutos.</p>
+      </div>
+
+      <div class="card">
+        <div class="path-head"><span class="pill man">Caminho manual</span><h3>Passo a passo, com o que aparece na tela</h3></div>
+        <ol class="manual" style="margin-top:18px">
+          <li><div><b>Instale o Node.js</b><p>Entre em nodejs.org, baixe a versão marcada como LTS e instale como qualquer programa. O Node.js é o que faz os comandos de vídeo funcionarem.</p></div></li>
+          <li><div><b>Instale o Git</b><p>Entre em git-scm.com e instale. No Mac, ele costuma já vir instalado.</p></div></li>
+          <li><div><b>Abra o Claude Code ou o Codex numa pasta nova</b><p>Crie uma pasta chamada meus-videos e abra a ferramenta de IA dentro dela.</p></div></li>
+          <li><div><b>Instale as habilidades de vídeo</b><p>Peça para a IA rodar o comando abaixo, ou cole no terminal:</p>
+            <div class="code-wrap"><pre class="code" id="p-install">npx skills add remotion-dev/skills</pre><button class="copy" type="button" data-copy="p-install">Copiar</button></div>
+            <p class="screen-note">Na tela: uma lista das habilidades instaladas, como remotion-create, remotion-render e remotion-captions.</p></div></li>
+          <li><div><b>Reinicie a conversa</b><p>Feche e abra o Claude Code ou o Codex de novo para que ele carregue as habilidades novas.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <div class="path-head"><span class="pill test">Teste "Funcionou?"</span><h3>Confirme em 1 minuto</h3></div>
+        <p class="lede" style="margin:10px 0 16px;font-size:16px">Cole este pedido. No Codex, escreva o mesmo pedido sem a barra e diga "use a habilidade remotion-create".</p>
+        <div class="code-wrap"><pre class="code" id="p-teste">/remotion-create Crie um vídeo de 5 segundos com o texto "Funcionou!" no centro, em letras grandes, e abra a prévia.</pre><button class="copy" type="button" data-copy="p-teste">Copiar</button></div>
+        <div class="okbad">
+          <div class="y"><b>Deu certo se…</b>abrir uma aba no navegador com o Remotion Studio mostrando "Funcionou!" e uma linha do tempo embaixo.</div>
+          <div class="n"><b>Não abriu?</b>Peça: "/remotion-studio abra a prévia". Se aparecer "npx não é reconhecido", o Node.js não foi instalado. Volte ao passo 1.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECEITAS -->
+<section class="block" id="receitas">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:06 <span>· Receitas prontas</span></div>
+      <h2>12 receitas, organizadas pelo que você quer fazer</h2>
+      <p class="lede">Preencha as caixinhas e o prompt se monta sozinho. Depois é só copiar e colar no Claude Code ou no Codex, com o projeto de vídeo aberto.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filtrar receitas">
+      <button type="button" data-f="todas" aria-pressed="true">Todas</button>
+      <button type="button" data-f="vender" aria-pressed="false">Vender</button>
+      <button type="button" data-f="conteudo" aria-pressed="false">Conteúdo</button>
+      <button type="button" data-f="aulas" aria-pressed="false">Aulas e podcast</button>
+      <button type="button" data-f="lugares" aria-pressed="false">Lugares</button>
+      <button type="button" data-f="acabamento" aria-pressed="false">Acabamento</button>
+    </div>
+    <div class="recipes" id="recipes"></div>
+  </div>
+</section>
+
+<!-- FLUXOS -->
+<section class="block" id="fluxos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:07 <span>· Fluxos completos</span></div>
+      <h2>Receitas encadeadas que entregam um vídeo inteiro</h2>
+      <p class="lede">Siga as etapas na ordem, na mesma conversa. Toque em uma etapa para ir direto à receita.</p>
+    </div>
+    <div class="flows" id="flows"></div>
+  </div>
+</section>
+
+<!-- TRILHA -->
+<section class="block" id="trilha">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:08 <span>· Trilha de 7 dias</span></div>
+      <h2>Uma tarefa por dia, até virar rotina</h2>
+      <p class="lede">Marque o que já fez. O seu progresso fica salvo neste navegador.</p>
+    </div>
+    <div class="trail-bar"><span id="trail-count">0 de 7</span><div class="bar"><div class="fill" id="trail-fill"></div></div></div>
+    <div class="trail" id="trail"></div>
+  </div>
+</section>
+
+<!-- TRANSPARÊNCIA -->
+<section class="block" id="transparencia">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:09 <span>· Ficha de transparência</span></div>
+      <h2>O que você precisa saber antes de começar</h2>
+    </div>
+    <div class="facts-sheet">
+      <div><h3>Quanto custa</h3><ul>
+        <li>As habilidades do Remotion são gratuitas e de código aberto.</li>
+        <li>O Remotion é gratuito para pessoas físicas e empresas com até 3 funcionários. Empresas maiores precisam de licença paga. Confira em remotion.dev/license.</li>
+        <li>O Claude Code e o Codex exigem um plano pago da Anthropic ou da OpenAI.</li>
+        <li>A locução com IA usa o ElevenLabs, que tem plano gratuito limitado e planos pagos.</li>
+      </ul></div>
+      <div><h3>O que você precisa ter</h3><ul>
+        <li>Computador Mac, Windows ou Linux.</li>
+        <li>Node.js e Git instalados (gratuitos).</li>
+        <li>Para legendas automáticas a partir do áudio: placa de vídeo compatível. Sem ela, use um arquivo de legenda .srt.</li>
+        <li>Para mapas: o estilo MapLibre é gratuito e não pede chave. Mapbox pede uma chave própria.</li>
+      </ul></div>
+      <div><h3>Limitações</h3><ul>
+        <li>Não é um editor de arrastar e soltar como o CapCut. Você pede, a IA escreve o vídeo e você ajusta na prévia.</li>
+        <li>Exportar vídeos longos usa bastante o computador e pode demorar.</li>
+        <li>O resultado depende da clareza do pedido. Pedidos vagos geram vídeos genéricos.</li>
+      </ul></div>
+      <div><h3>O que o kit não faz</h3><ul>
+        <li>Não grava vídeo nem tira fotos.</li>
+        <li>Não publica nas redes sociais.</li>
+        <li>Não cria imagens de pessoas ou produtos do zero. Use as suas fotos e vídeos.</li>
+      </ul></div>
+      <div class="wide"><h3>Fonte e versão</h3><p>Guia baseado no repositório oficial <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">github.com/remotion-dev/skills</a>, versão 4.0.535, consultado em 12 de outubro de 2026. Este é um guia independente da coleção Pulso Lab e não é afiliado ao Remotion, à Anthropic ou à OpenAI.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DÚVIDAS -->
+<section class="block" id="duvidas">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:10 <span>· Dúvidas e problemas comuns</span></div>
+      <h2>Se algo der errado</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Apareceu "npx não é reconhecido" ou "command not found".</summary><p>O Node.js não está instalado ou o computador ainda não o reconheceu. Instale pelo nodejs.org, feche e abra o Claude Code ou o Codex de novo e tente outra vez.</p></details>
+      <details><summary>A prévia não abriu no navegador.</summary><p>Peça "/remotion-studio abra a prévia". A IA vai mostrar um endereço que começa com http://localhost. Copie esse endereço e cole no seu navegador.</p></details>
+      <details><summary>A transcrição para legendas deu erro.</summary><p>A transcrição automática roda no seu computador e precisa de uma placa de vídeo compatível. Se não funcionar, gere a legenda em outro serviço, salve como arquivo .srt e peça: "importe as legendas do arquivo legenda.srt".</p></details>
+      <details><summary>O vídeo saiu com textos em inglês ou com cara de modelo pronto.</summary><p>Diga sempre "em português do Brasil" e descreva o estilo: cores, fontes, tom e para quem é o vídeo. Quanto mais específico o pedido, mais o resultado parece seu.</p></details>
+      <details><summary>Fiz uma mudança na prévia e a IA desfez.</summary><p>As habilidades orientam a IA a preservar as suas mudanças. Se acontecer, avise: "eu mudei o título manualmente, mantenha a minha versão".</p></details>
+      <details><summary>Como atualizo as habilidades?</summary><p>Peça "/remotion-upgrade". A IA atualiza o Remotion e as habilidades instaladas.</p></details>
+      <details><summary>Onde fica o meu vídeo final?</summary><p>Na pasta "out", dentro do seu projeto. Peça "me diga onde o arquivo ficou" que a IA mostra o caminho.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSÁRIO -->
+<section class="block" id="glossario">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="mark">00:11 <span>· Mini glossário</span></div>
+      <h2>As palavras que aparecem no caminho</h2>
+    </div>
+    <dl class="gloss">
+      <div><dt>Habilidade (skill)</dt><dd>Um manual que ensina a IA a fazer uma tarefa específica do jeito certo.</dd></div>
+      <div><dt>Remotion</dt><dd>A tecnologia que transforma código em vídeo. A IA escreve o código, você só conversa.</dd></div>
+      <div><dt>Remotion Studio</dt><dd>A tela no navegador onde você assiste à prévia e vê a linha do tempo.</dd></div>
+      <div><dt>Terminal</dt><dd>A janela de texto onde os comandos rodam. A IA usa por você.</dd></div>
+      <div><dt>Node.js</dt><dd>Programa gratuito que faz os comandos do Remotion funcionarem.</dd></div>
+      <div><dt>npx</dt><dd>O começo dos comandos de instalação. Vem junto com o Node.js.</dd></div>
+      <div><dt>Composição</dt><dd>Um vídeo dentro do projeto, com tamanho e duração próprios.</dd></div>
+      <div><dt>Renderizar</dt><dd>Transformar a prévia em um arquivo de vídeo de verdade, como MP4.</dd></div>
+      <div><dt>FPS</dt><dd>Quadros por segundo. 30 FPS é o padrão das redes sociais.</dd></div>
+      <div><dt>Chave de API</dt><dd>Uma senha que liga um serviço, como o ElevenLabs, ao seu projeto. Não compartilhe.</dd></div>
+      <div><dt>.srt</dt><dd>Arquivo de legenda com o texto e o tempo de cada frase.</dd></div>
+      <div><dt>Light leak</dt><dd>Efeito de vazamento de luz, comum em vídeos com cara de cinema.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- CARTÃO DE BOLSO -->
+<section class="block" id="bolso">
+  <div class="wrap">
+    <div class="pocket">
+      <div class="mark" style="color:var(--amber)">00:12 <span style="color:inherit;opacity:.7">· Cartão de bolso</span></div>
+      <h2 style="margin-top:12px">Os 10 pedidos que você vai usar sempre</h2>
+      <p class="lede" style="margin-top:12px">Copie um por um, ou copie todos e salve nas suas notas.</p>
+      <div class="pocket-grid" id="pocket"></div>
+      <div class="ctas"><button class="btn primary" type="button" id="copy-all">Copiar os 10 pedidos</button><a class="btn" href="#receitas">Voltar às receitas</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>SeuLab · Coleção Guias de IA Pulso Lab · Edição 01 · outubro de 2026</span>
+    <span>Baseado no Remotion Agent Skills v4.0.535</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Cópia ---------- */
+  function copyText(text, btn){
+    var ok = function(){ var o = btn.textContent; btn.textContent = "Copiado!"; btn.classList.add("done"); setTimeout(function(){ btn.textContent = o; btn.classList.remove("done"); }, 1600); };
+    var fallback = function(){
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); ok(); } catch(e) { btn.textContent = "Selecione e copie"; }
+      document.body.removeChild(ta);
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback);
+      else fallback();
+    } catch(e) { fallback(); }
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-copy]"); if (!b) return;
+    var el = document.getElementById(b.getAttribute("data-copy"));
+    if (el) copyText(el.textContent, b);
+  });
+
+  /* ---------- Receitas ---------- */
+  var R = [
+    {id:"promo", t:"Vídeo promocional do seu produto", lvl:1, time:"15 min", tags:["vender","ideia"],
+     why:"Um vídeo curto de venda com gancho, produto em destaque e chamada para ação.",
+     fields:[["produto","O que você vende","minha linha de velas aromáticas"],["publico","Para quem","mulheres de 25 a 40 anos que amam decorar a casa"],["formato","Formato","sel:vertical 1080x1920 (Reels, TikTok)|quadrado 1080x1080 (feed)|horizontal 1920x1080 (YouTube)"],["duracao","Duração em segundos","15"],["tom","Tom","sel:acolhedor e elegante|divertido e enérgico|sério e confiável|luxuoso e minimalista"],["cores","Cores da marca","bege, verde-oliva e branco"],["cta","Chamada final","Peça pelo direct",1]],
+     tpl:'/remotion-create Crie um vídeo promocional de {duracao} segundos, no formato {formato}, para {produto}. O público é {publico}. Tom {tom}. Estrutura: 1) gancho forte nos 2 primeiros segundos, 2) o problema que o produto resolve, 3) o produto em destaque, 4) chamada final: "{cta}". Textos em português do Brasil, grandes e legíveis no celular, transições suaves e as cores {cores}. Abra a prévia no Remotion Studio para eu acompanhar.',
+     out:"Um projeto com 4 cenas aberto no navegador, pronto para você assistir e pedir ajustes.",
+     tip:"Peça ajustes cena por cena: \"Na cena 2, aumente o texto e deixe a entrada mais lenta.\""},
+    {id:"legendas", t:"Legendas automáticas a partir do áudio", lvl:2, time:"20 min", tags:["conteudo","aulas","gravado","audio"],
+     why:"Transcreve o que você fala e coloca a legenda no vídeo. A maioria das pessoas assiste sem som.",
+     fields:[["arquivo","Nome do arquivo de vídeo","meu-video.mp4"],["palavras","Palavras por vez","sel:2 a 3 palavras|uma frase curta"],["estilo","Estilo da letra","brancas, em negrito, com contorno preto",1]],
+     tpl:'/remotion-captions Transcreva o áudio do vídeo {arquivo}, que está na pasta public do projeto, e gere legendas em português do Brasil. Mostre {palavras} por vez, com letras {estilo}, na parte de baixo da tela, sem cobrir o rosto. Depois abra a prévia.',
+     out:"O vídeo com legendas sincronizadas com a sua fala.",
+     warn:"Coloque o vídeo na pasta public do projeto antes. A transcrição precisa de placa de vídeo compatível; se der erro, use um arquivo .srt.",
+     tip:"Revise na prévia e corrija em lote: \"troque 'clod' por 'Claude' em todas as legendas\"."},
+    {id:"silencio", t:"Cortar pausas e silêncios", lvl:2, time:"10 min", tags:["conteudo","aulas","gravado"],
+     why:"Remove as pausas longas da sua gravação e deixa o vídeo mais dinâmico, sem cortar na mão.",
+     fields:[["arquivo","Nome do arquivo de vídeo","minha-aula.mp4"],["pausa","Cortar pausas maiores que (segundos)","0.7"]],
+     tpl:'Analise o vídeo {arquivo}, que está na pasta public, usando a detecção de silêncio adaptativa do Remotion. Remova as pausas maiores que {pausa} segundos e monte a linha do tempo só com os trechos falados, em sequência. Deixe cada trecho como um clipe separado, para eu ajustar no Remotion Studio. Depois abra a prévia.',
+     out:"O vídeo sem as pausas longas, com cada trecho separado na linha do tempo.",
+     tip:"Se um corte ficar seco demais, peça: \"deixe 0,2 segundo de respiro antes de cada trecho\"."},
+    {id:"locucao", t:"Locução com voz de IA", lvl:2, time:"20 min", tags:["vender","aulas","ideia"],
+     why:"Uma narração profissional sem gravar a sua voz. Cada cena se ajusta ao tamanho da fala.",
+     fields:[["voz","Tipo de voz","sel:feminina, calorosa|masculina, grave|feminina, enérgica|masculina, calma"],["roteiro","Texto de cada cena","Cena 1: Sua casa merece esse cheiro. Cena 2: Velas de soja feitas à mão. Cena 3: Peça pelo direct.",1]],
+     tpl:'Adicione uma locução com voz de IA ao vídeo usando o ElevenLabs, em português do Brasil, com voz {voz}. Texto de cada cena: {roteiro} Ajuste a duração de cada cena ao tamanho da fala. Peça a minha chave de API do ElevenLabs e guarde de forma segura, sem mostrar no código.',
+     out:"O vídeo narrado, com as cenas no tempo exato de cada fala.",
+     warn:"Precisa de conta no ElevenLabs e de uma chave de API. A IA vai pedir.",
+     tip:"Escreva o roteiro como você fala, com frases curtas. Vírgula vira pausa na voz."},
+    {id:"destaque", t:"Grifar e circular palavras", lvl:1, time:"5 min", tags:["vender","conteudo","aulas","acabamento"],
+     why:"Destaques animados, como marca-texto desenhado à mão, que guiam o olhar para o que importa.",
+     fields:[["cena","Em qual cena","1"],["frase","Frase para grifar","feito à mão"],["cor","Cor do grifo","amarelo"],["palavra","Palavra para circular","grátis"]],
+     tpl:'/remotion-markup Na cena {cena}, anime um destaque de marca-texto {cor} atrás da frase "{frase}", como se fosse desenhado à mão. Depois, circule a palavra "{palavra}" com o mesmo estilo.',
+     out:"Grifos e círculos animados no ritmo do vídeo.",
+     tip:"Use um destaque por cena. Destacar tudo é o mesmo que não destacar nada."},
+    {id:"transicoes", t:"Transições e efeito de luz de cinema", lvl:1, time:"5 min", tags:["vender","conteudo","acabamento"],
+     why:"O acabamento que separa um vídeo amador de um vídeo de agência.",
+     fields:[["transicao","Tipo de transição","sel:suave (fade)|deslizar (slide)|cortina (wipe)"]],
+     tpl:'Entre todas as cenas do vídeo, adicione transições do tipo {transicao}. Nos cortes principais, adicione um efeito de luz (light leak) sutil, para dar acabamento de cinema. Se a versão do Remotion for antiga para o light leak, atualize antes.',
+     out:"Cenas que se ligam com fluidez e brilho de cinema nos cortes.",
+     tip:"Mantenha o mesmo tipo de transição no vídeo todo. Misturar vários tipos parece amador."},
+    {id:"sons", t:"Efeitos sonoros nos momentos certos", lvl:1, time:"5 min", tags:["vender","conteudo","acabamento"],
+     why:"Um \"whoosh\" na troca de cena e um \"ding\" na oferta prendem a atenção.",
+     fields:[["momento","Onde tocar o \"ding\"","quando aparecer o preço"]],
+     tpl:'Adicione efeitos sonoros ao vídeo: um "whoosh" em cada troca de cena e um "ding" {momento}. Use os sons da biblioteca do Remotion e mantenha o volume baixo para não competir com a fala ou a música.',
+     out:"O vídeo com sons sincronizados às transições e ao momento-chave.",
+     tip:"A biblioteca tem sons de clique, câmera fotográfica e notificação. Peça: \"mostre a lista de sons disponíveis\"."},
+    {id:"podcast", t:"Podcast vira vídeo para as redes", lvl:2, time:"25 min", tags:["aulas","conteudo","audio"],
+     why:"Um trecho de áudio vira vídeo com ondas animadas que reagem à voz.",
+     fields:[["arquivo","Nome do arquivo de áudio","episodio-12.mp3"],["titulo","Título do episódio","Como precificar sem medo"],["cor","Cor de fundo","azul-marinho"]],
+     tpl:'/remotion-create Crie um vídeo vertical 1080x1920 para o áudio {arquivo}, que está na pasta public. Fundo {cor}, o título "{titulo}" no topo e uma visualização de áudio animada no centro, que reage à voz. Duração igual à do áudio. Depois abra a prévia.',
+     out:"Um vídeo com as ondas do áudio em movimento, pronto para Reels e Shorts.",
+     tip:"Corte o trecho mais forte do episódio, de 30 a 60 segundos. Junte com a receita de legendas."},
+    {id:"mapa", t:"Mapa animado de rota", lvl:2, time:"20 min", tags:["lugares"],
+     why:"Mostra um trajeto com a câmera acompanhando, como nos vídeos de viagem e de entrega.",
+     fields:[["origem","Saída","São Paulo"],["destino","Chegada","Florianópolis"],["titulo","Título do vídeo","Entregamos em todo o Sul"]],
+     tpl:'/remotion-maps Anime uma rota de {origem} até {destino}, com a câmera acompanhando o trajeto e um marcador em cada cidade. Mostre o título "{titulo}" no começo. Use o MapLibre, que é gratuito e não precisa de chave, com um estilo de mapa claro e limpo.',
+     out:"Um vídeo de mapa com a rota sendo desenhada e a câmera em movimento.",
+     tip:"Para várias paradas, liste as cidades na ordem: \"São Paulo, Curitiba, Florianópolis\"."},
+    {id:"capa", t:"Capa do vídeo no mesmo visual", lvl:1, time:"5 min", tags:["vender","conteudo","acabamento"],
+     why:"Uma imagem de capa para o Reels ou a miniatura do YouTube, com a identidade do vídeo.",
+     fields:[["titulo","Texto da capa","3 velas para relaxar"],["tamanho","Tamanho","sel:1080x1920 (capa de Reels)|1280x720 (miniatura do YouTube)"]],
+     tpl:'Crie uma imagem estática de {tamanho} para ser a capa deste vídeo, com o texto "{titulo}" em letras enormes e o mesmo visual do vídeo. Depois use /remotion-render para exportar como PNG e me diga onde o arquivo ficou.',
+     out:"Uma imagem PNG pronta para usar como capa.",
+     tip:"Na capa, use no máximo 5 palavras. Ela precisa ser lida em miniatura."},
+    {id:"modelo", t:"Modelo de vídeo editável da sua marca", lvl:3, time:"30 min", tags:["vender","conteudo","aulas"],
+     why:"Você faz uma vez e reaproveita toda semana. Muda texto, cor e tempo clicando no Studio.",
+     fields:[["marca","Nome da marca","Ateliê Lume"]],
+     tpl:'/remotion-interactivity Transforme este vídeo em um modelo reutilizável da marca {marca}. Quero mudar textos, cores, imagens e o tempo de cada cena clicando no Remotion Studio, sem precisar pedir para a IA toda vez. Organize as cenas para que cada uma possa ser editada separadamente e me explique como usar.',
+     out:"Um modelo da sua marca que gera vídeos novos em minutos.",
+     tip:"É aqui que o kit se paga: um modelo bem feito vira 4 vídeos por mês."},
+    {id:"exportar", t:"Exportar o vídeo final", lvl:1, time:"5 min", tags:["vender","conteudo","aulas","lugares","acabamento"],
+     why:"Transforma a prévia em um arquivo MP4 para publicar ou enviar.",
+     fields:[],
+     tpl:'/remotion-render Exporte o vídeo final em MP4, em alta qualidade, e me diga em que pasta o arquivo ficou.',
+     out:"Um arquivo MP4 na pasta out do seu projeto.",
+     tip:"Vídeos longos demoram mais. Deixe o computador ligado e na tomada durante a exportação."}
+  ];
+
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+  var lvlName = ["","Iniciante","Intermediário","Avançado"];
+  var box = document.getElementById("recipes");
+  box.innerHTML = R.map(function(r){
+    var f = r.fields.map(function(x){
+      var id = "f-" + r.id + "-" + x[0], full = x[3] ? " full" : "", ctl;
+      if (x[2].indexOf("sel:") === 0) {
+        ctl = '<select id="' + id + '" data-k="' + x[0] + '">' + x[2].slice(4).split("|").map(function(o){ return "<option>" + esc(o) + "</option>"; }).join("") + "</select>";
+      } else {
+        ctl = '<input id="' + id + '" data-k="' + x[0] + '" value="' + esc(x[2]) + '">';
+      }
+      return '<div class="field' + full + '"><label for="' + id + '">' + esc(x[1]) + "</label>" + ctl + "</div>";
+    }).join("");
+    return '<article class="card recipe" id="r-' + r.id + '" data-tags="' + r.tags.join(" ") + '">' +
+      '<div class="r-meta"><span class="lvl l' + r.lvl + '">' + lvlName[r.lvl] + '</span><span class="time">⏱ ' + r.time + '</span><span class="foryou" hidden>Indicado para você</span></div>' +
+      "<h3>" + esc(r.t) + "</h3>" +
+      '<p class="why">' + esc(r.why) + "</p>" +
+      (f ? '<div class="builder" data-r="' + r.id + '"><div class="builder-title">Monte o seu pedido</div>' + f + "</div>" : "") +
+      '<div class="code-wrap"><pre class="code" id="p-' + r.id + '"></pre><button class="copy" type="button" data-copy="p-' + r.id + '">Copiar</button></div>' +
+      '<div class="out"><div><span class="ic">→</span><span><b>Resultado:</b> ' + esc(r.out) + "</span></div>" +
+      (r.warn ? '<div class="warn"><span class="ic">!</span><span><b>Antes:</b> ' + esc(r.warn) + "</span></div>" : "") +
+      '<div><span class="ic">★</span><span><b>Dica de profissional:</b> ' + esc(r.tip) + "</span></div></div>" +
+      "</article>";
+  }).join("");
+
+  function build(r){
+    var card = document.getElementById("r-" + r.id), txt = r.tpl;
+    card.querySelectorAll("[data-k]").forEach(function(el){
+      var v = el.value.trim() || "[" + el.previousSibling.textContent + "]";
+      txt = txt.split("{" + el.getAttribute("data-k") + "}").join(v);
+    });
+    document.getElementById("p-" + r.id).textContent = txt;
+  }
+  R.forEach(build);
+  box.addEventListener("input", function(e){
+    var b = e.target.closest(".builder"); if (!b) return;
+    var r = R.filter(function(x){ return x.id === b.getAttribute("data-r"); })[0]; if (r) build(r);
+  });
+
+  /* filtros */
+  var fbtns = document.querySelectorAll(".filters button");
+  fbtns.forEach(function(btn){ btn.addEventListener("click", function(){
+    var f = btn.getAttribute("data-f");
+    fbtns.forEach(function(b){ b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+    box.querySelectorAll(".recipe").forEach(function(c){ c.hidden = !(f === "todas" || c.getAttribute("data-tags").split(" ").indexOf(f) > -1); });
+  }); });
+
+  /* ---------- Cartão de bolso ---------- */
+  var pocketIds = ["promo","legendas","silencio","locucao","destaque","transicoes","sons","capa","modelo","exportar"];
+  document.getElementById("pocket").innerHTML = pocketIds.map(function(id){
+    return '<div class="pk"><code id="k-' + id + '"></code><button type="button" data-copy="k-' + id + '">Copiar</button></div>';
+  }).join("");
+  function syncPocket(){ pocketIds.forEach(function(id){ document.getElementById("k-" + id).textContent = document.getElementById("p-" + id).textContent; }); }
+  syncPocket();
+  box.addEventListener("input", syncPocket);
+  document.getElementById("copy-all").addEventListener("click", function(){
+    var all = pocketIds.map(function(id, i){ return (i + 1) + ". " + document.getElementById("k-" + id).textContent; }).join("\n\n");
+    copyText(all, this);
+  });
+
+  /* ---------- Fluxos ---------- */
+  var F = [
+    {t:"Do vídeo gravado ao Reels pronto", time:"cerca de 40 min", steps:["silencio","legendas","destaque","sons","exportar"], p:"Para quem grava falando para a câmera. Sai um Reels dinâmico, legendado e com acabamento."},
+    {t:"Anúncio de lançamento", time:"cerca de 45 min", steps:["promo","locucao","transicoes","capa","exportar"], p:"Para lançar um produto sem gravar nada. Sai o vídeo narrado e a capa no mesmo visual."},
+    {t:"Podcast vira conteúdo", time:"cerca de 35 min", steps:["podcast","legendas","exportar"], p:"Para quem tem episódios gravados. Cada episódio rende vários cortes para as redes."},
+    {t:"O modelo de vídeo da sua marca", time:"cerca de 1 h, uma vez só", steps:["promo","transicoes","sons","modelo","exportar"], p:"Para quem publica toda semana. Depois de pronto, cada vídeo novo leva minutos."}
+  ];
+  var nameOf = {}; R.forEach(function(r){ nameOf[r.id] = r.t; });
+  document.getElementById("flows").innerHTML = F.map(function(f){
+    return '<article class="card flow"><h3>' + esc(f.t) + '</h3><span class="time">⏱ ' + f.time + '</span><div class="flow-steps">' +
+      f.steps.map(function(s, i){ return (i ? '<span class="arr">→</span>' : "") + '<a href="#r-' + s + '" data-jump="' + s + '">' + (i + 1) + ". " + esc(nameOf[s]) + "</a>"; }).join("") +
+      "</div><p>" + esc(f.p) + "</p></article>";
+  }).join("");
+  document.addEventListener("click", function(e){
+    var a = e.target.closest("[data-jump]"); if (!a) return;
+    var c = document.getElementById("r-" + a.getAttribute("data-jump"));
+    if (c && c.hidden) { document.querySelector('.filters [data-f="todas"]').click(); }
+    if (c) { c.classList.remove("flash"); void c.offsetWidth; c.classList.add("flash"); setTimeout(function(){ c.classList.remove("flash"); }, 1800); }
+  });
+
+  /* ---------- Diagnóstico ---------- */
+  var plans = {
+    vender:{t:"Comece pelo anúncio de lançamento", f:1, p:"Seu caminho é vídeo de venda: gancho, produto e chamada. Depois, transforme o melhor deles em modelo da marca."},
+    conteudo:{t:"Comece pelo Reels a partir do que você grava", f:0, p:"Seu caminho é ganhar velocidade: cortar pausas, legendar e dar acabamento em minutos."},
+    aulas:{t:"Comece transformando aulas e áudios em vídeo", f:2, p:"Seu caminho é reaproveitar o que você já produz: cada aula ou episódio vira vários cortes."},
+    lugares:{t:"Comece pelo mapa animado", f:1, p:"Seu caminho é mostrar onde você atua: rotas, entregas e destinos com câmera em movimento."}
+  };
+  function diag(){
+    var q = function(n){ var el = document.querySelector('input[name="' + n + '"]:checked'); return el ? el.value : ""; };
+    var a = q("q1"), b = q("q2"), c = q("q3"), pick = [];
+    R.forEach(function(r){
+      var score = (r.tags.indexOf(a) > -1 ? 2 : 0) + (r.tags.indexOf(b) > -1 ? 1 : 0);
+      if (c === "iniciante" && r.lvl === 3) score -= 1;
+      if (r.id === "exportar") score = 0;
+      if (score >= 2) pick.push(r.id);
+    });
+    pick = pick.slice(0, 4);
+    box.querySelectorAll(".recipe").forEach(function(el){
+      var on = pick.indexOf(el.id.slice(2)) > -1;
+      el.classList.toggle("pick", on);
+      el.querySelector(".foryou").hidden = !on;
+    });
+    var pl = plans[a] || plans.vender;
+    var start = c === "iniciante" ? "Como você nunca abriu o terminal, use o caminho fácil da instalação: a IA instala tudo por você." : "Você pode seguir o caminho manual de instalação, que é rápido.";
+    document.getElementById("verdict").innerHTML =
+      '<div class="mark">Seu ponto de partida</div><h3>' + esc(pl.t) + "</h3><p>" + esc(pl.p) + " " + start + '</p><div class="chips">' +
+      pick.map(function(id){ return '<a href="#r-' + id + '" data-jump="' + id + '">' + esc(nameOf[id]) + "</a>"; }).join("") +
+      '<a href="#fluxos">Fluxo: ' + esc(F[pl.f].t) + "</a></div>";
+  }
+  document.getElementById("quiz").addEventListener("change", diag);
+  document.getElementById("quiz").addEventListener("submit", function(e){ e.preventDefault(); });
+  diag();
+
+  /* ---------- Calculadora ---------- */
+  var brl = function(n){ return "R$ " + Math.round(n).toLocaleString("pt-BR"); };
+  function calc(){
+    var v = Math.max(0, +document.getElementById("c-videos").value || 0);
+    var h = Math.max(0, +document.getElementById("c-horas").value || 0);
+    var val = Math.max(0, +document.getElementById("c-valor").value || 0);
+    var saved = Math.max(0, v * (h - 1));
+    document.getElementById("r-horas").textContent = (Math.round(saved * 10) / 10).toLocaleString("pt-BR") + " h";
+    document.getElementById("r-mes").textContent = brl(saved * val);
+    document.getElementById("r-ano").textContent = brl(saved * val * 12);
+  }
+  ["c-videos","c-horas","c-valor"].forEach(function(id){ document.getElementById(id).addEventListener("input", calc); });
+  calc();
+
+  /* ---------- Trilha ---------- */
+  var D = [
+    ["Instalar","Use o prompt do caminho fácil e faça o teste \"Funcionou?\"."],
+    ["Primeiro vídeo","Faça a receita Vídeo promocional com um produto ou serviço seu."],
+    ["Pedir ajustes","Mude 3 coisas pela conversa: tamanho do texto, cor e ritmo de uma cena."],
+    ["Acabamento","Adicione transições, efeito de luz e efeitos sonoros."],
+    ["Voz e legenda","Escolha: locução com IA ou legendas de um vídeo seu."],
+    ["Exportar","Exporte em MP4 e crie a capa no mesmo visual."],
+    ["Virar rotina","Transforme o melhor vídeo em modelo da marca e publique."]
+  ];
+  var KEY = "kitvideo-trilha", saved = [];
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e) { saved = []; }
+  var trail = document.getElementById("trail");
+  trail.innerHTML = D.map(function(d, i){
+    return '<label class="day" for="d' + i + '"><input type="checkbox" id="d' + i + '"' + (saved.indexOf(i) > -1 ? " checked" : "") + '><span class="d">Dia ' + (i + 1) + "</span><span><b>" + esc(d[0]) + "</b><small>" + esc(d[1]) + "</small></span></label>";
+  }).join("");
+  function trailUpdate(){
+    var done = [];
+    trail.querySelectorAll("input").forEach(function(el, i){ if (el.checked) done.push(i); });
+    document.getElementById("trail-count").textContent = done.length + " de 7";
+    document.getElementById("trail-fill").style.width = (done.length / 7 * 100) + "%";
+    try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e) {}
+  }
+  trail.addEventListener("change", trailUpdate);
+  trailUpdate();
+
+  /* ---------- Timecode do hero ---------- */
+  var tc = document.getElementById("tc"), reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) {
+    var t0 = performance.now();
+    var pad = function(n){ return (n < 10 ? "0" : "") + n; };
+    (function tick(now){
+      var f = Math.floor(((now - t0) / 1000 % 6) * 30);
+      tc.textContent = "00:00:" + pad(Math.floor(f / 30)) + ":" + pad(f % 30);
+      requestAnimationFrame(tick);
+    })(t0);
+  }
+
+  /* ---------- Progresso e índice ---------- */
+  var bar = document.getElementById("progress"), links = document.querySelectorAll(".toc a");
+  function onScroll(){
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + "%";
+    var cur = "";
+    links.forEach(function(a){ var s = document.querySelector(a.getAttribute("href")); if (s && s.getBoundingClientRect().top < 120) cur = a.getAttribute("href"); });
+    links.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === cur); });
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+
+</html>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" role="img" aria-labelledby="title desc">
+<title id="title">SeuLab · Editor de Vídeos IA</title>
+<desc id="desc">Marca SeuLab com símbolo de play em gradiente violeta e ciano.</desc>
+<defs>
+  <linearGradient id="g1" x1="28" y1="30" x2="142" y2="146" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#B06CFF"/>
+    <stop offset=".42" stop-color="#7C3CFF"/>
+    <stop offset=".76" stop-color="#3D7BFF"/>
+    <stop offset="1" stop-color="#35E0D0"/>
+  </linearGradient>
+  <linearGradient id="word" x1="375" y1="55" x2="600" y2="112" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#A66CFF"/>
+    <stop offset=".55" stop-color="#8B5CF6"/>
+    <stop offset="1" stop-color="#6F39F5"/>
+  </linearGradient>
+  <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<g transform="translate(22 18)">
+  <path d="M38 24 L132 82 L38 140" fill="none" stroke="url(#g1)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M50 49 L103 82 L50 115 Z" fill="#090B12" stroke="url(#g1)" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<text x="188" y="105" fill="#F7F8FC" font-family="Inter,Arial,sans-serif" font-size="78" font-weight="800" letter-spacing="-5">Seu</text>
+<text x="330" y="105" fill="url(#word)" font-family="Inter,Arial,sans-serif" font-size="78" font-weight="800" letter-spacing="-5">Lab</text>
+<text x="192" y="144" fill="#B7BECE" font-family="Arial,sans-serif" font-size="22" font-weight="600" letter-spacing="9">EDITOR DE VÍDEOS IA</text>
+</svg>

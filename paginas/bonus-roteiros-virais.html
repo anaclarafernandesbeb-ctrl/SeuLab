@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SeuLab · Bônus — Roteiros Virais | Pulso Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#07080D; --surface:#0D1018; --ink:#F7F8FC; --muted:#9BA4B8; --line:#252B3A;
+  --accent:#8B5CF6; --accent-ink:#FFFFFF; --accent-soft:#21183E;
+  --amber:#35D7C9; --track:#171C29; --ok:#48D597; --ok-soft:#102B22;
+  --code-bg:#090B12; --code-ink:#F7F8FC; --hl:#35D7C9;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.08}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch;font-size:18px}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+header.top{padding-block:40px 8px}
+header.top h1{font-size:clamp(32px,5.5vw,48px);font-stretch:125%;font-weight:900;letter-spacing:-.02em;margin-top:12px}
+header.top h1 em{font-style:normal;color:var(--accent)}
+header.top .lede{margin-top:14px}
+main{padding-block:28px 60px}
+.builder{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;display:grid;gap:22px;margin-top:24px}
+.q{display:grid;gap:10px;border:0;margin:0;padding:0;min-width:0}
+.q legend,.q > label{font-weight:700;font-size:16px}
+.q .hint{font-size:14px;color:var(--muted);margin-top:-6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt > span{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;font-size:15px;font-weight:500}
+.opt input:checked + span{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.txt{font:500 16px var(--f-body);padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.txt:focus{border-color:var(--accent);outline:none}
+textarea.txt{min-height:90px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.row2>*{min-width:0}
+.copy-hero{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px}
+.copy-hero b{font-family:var(--f-display);font-size:20px;font-stretch:112%}
+.copy-hero .btn{font:700 16px var(--f-body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:13px 22px;cursor:pointer}
+.copy-hero .btn.done{background:var(--ok);color:#fff}
+.code-wrap{position:relative;min-width:0;margin-top:10px}
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px;padding-right:110px;font:14px/1.65 var(--f-mono);white-space:pre-wrap;word-break:break-word;margin:0}
+.copy{position:absolute;top:12px;right:12px;font:700 13.5px var(--f-body);background:var(--hl);color:#15172B;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
+.copy.done{background:#18804F;color:#fff}
+.note{font-size:15px;color:var(--muted);border-left:3px solid var(--hl);padding:4px 0 4px 12px;margin-top:18px}
+.note b{color:var(--ink)}
+footer{padding-block:40px 60px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--line);margin-top:20px}
+@media (max-width:620px){.row2{grid-template-columns:1fr}.code{padding-right:18px;padding-top:56px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">Bônus SeuLab · Pulso Lab</div>
+    <h1>Cole o seu ICP. Receba <em>roteiros virais.</em></h1>
+    <p class="lede">Preencha quem é o seu cliente ideal e o que você vende. A ferramenta monta um prompt pronto — cole na IA (Claude ou ChatGPT) e receba roteiros curtos, com gancho, pensados para prender atenção nos primeiros 3 segundos.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="sub"><span class="eyebrow">Monte o seu prompt</span></div>
+    <form class="builder" id="form-icp" onsubmit="return false">
+      <div class="row2">
+        <div class="q"><label for="p-what">O que você vende ou ensina?</label><input class="txt" id="p-what" value="mentoria de emagrecimento para mulheres acima dos 40"></div>
+        <div class="q"><label for="p-who">Para quem? (seu ICP)</label><input class="txt" id="p-who" value="mulheres de 40 a 55 anos que já tentaram várias dietas e não conseguiram manter o resultado"></div>
+      </div>
+      <div class="q"><label for="p-pain">Maior dor ou desejo desse público</label><textarea class="txt" id="p-pain" placeholder="Ex.: se sentem cansadas de recomeçar do zero, querem resultado sem passar fome">Se sentem frustradas por já terem tentado de tudo e não verem resultado duradouro. Querem se sentir bem no corpo sem dietas restritivas.</textarea></div>
+      <fieldset class="q"><legend>Plataforma</legend><div class="opts">
+        <label class="opt"><input type="radio" name="p-platform" value="Reels e TikTok, vídeos verticais de 15 a 45 segundos" checked><span>📱 Reels / TikTok</span></label>
+        <label class="opt"><input type="radio" name="p-platform" value="YouTube Shorts, vídeos verticais de até 60 segundos"><span>▶️ Shorts</span></label>
+        <label class="opt"><input type="radio" name="p-platform" value="todas as redes verticais (Reels, TikTok e Shorts)"><span>🌐 Todas</span></label>
+      </div></fieldset>
+      <fieldset class="q"><legend>Seu jeito de falar</legend><div class="opts">
+        <label class="opt"><input type="radio" name="p-tone" value="leve e próximo, como uma conversa com uma amiga" checked><span>☕ Leve, de amiga</span></label>
+        <label class="opt"><input type="radio" name="p-tone" value="direto e confiante, de especialista"><span>🎯 Direto, de especialista</span></label>
+        <label class="opt"><input type="radio" name="p-tone" value="divertido e animado"><span>😄 Divertido</span></label>
+        <label class="opt"><input type="radio" name="p-tone" value="provocador, que gera debate nos comentários"><span>🔥 Provocador</span></label>
+      </div></fieldset>
+      <fieldset class="q"><legend>Quantos roteiros</legend><div class="opts">
+        <label class="opt"><input type="radio" name="p-qty" value="5"><span>5</span></label>
+        <label class="opt"><input type="radio" name="p-qty" value="7" checked><span>7</span></label>
+        <label class="opt"><input type="radio" name="p-qty" value="10"><span>10</span></label>
+      </div></fieldset>
+    </form>
+
+    <div class="copy-hero"><b>Seu prompt de roteiros virais</b><button type="button" class="btn" data-copy="p-out">Copiar prompt</button></div>
+    <div class="code-wrap"><pre class="code" id="p-out"></pre><button type="button" class="copy" data-copy="p-out">Copiar</button></div>
+
+    <p class="note"><b>Como usar:</b> copie o prompt acima e cole numa conversa nova com o Claude ou o ChatGPT. A IA vai devolver os roteiros prontos para você ler e gravar. Se algum roteiro não ficar com a sua cara, peça: "reescreva o roteiro [número] no meu tom de voz, mais curto".</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>SeuLab · Bônus Roteiros Virais · uma criação Pulso Lab</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+  var radio = function(name){ var el = document.querySelector('input[name="'+name+'"]:checked'); return el ? el.value : ""; };
+  var val = function(id){ return ($("#"+id).value || "").trim(); };
+
+  function build(){
+    var qty = radio("p-qty");
+    $("#p-out").textContent = [
+      "Quero roteiros de vídeo curto, para redes sociais, pensados para viralizar. Me ajude em português do Brasil.",
+      "",
+      "- O que eu vendo ou ensino: " + (val("p-what") || "[o que você vende]"),
+      "- Meu cliente ideal (ICP): " + (val("p-who") || "[seu público]"),
+      "- A maior dor ou desejo desse público: " + (val("p-pain") || "[a dor ou desejo]"),
+      "- Plataforma: " + radio("p-platform"),
+      "- Meu jeito de falar: " + radio("p-tone"),
+      "",
+      "Escreva " + qty + " roteiros usando técnicas de retenção e viralização (gancho nos 3 primeiros segundos, quebra de padrão, loop aberto, lista numerada, antes/depois, confissão pessoal, controvérsia leve — varie a técnica entre os roteiros).",
+      "",
+      "Para cada roteiro, me dê:",
+      "1. A técnica usada.",
+      "2. O gancho: a primeira frase, em até 8 palavras, que precisa prender a atenção.",
+      "3. O texto completo para eu ler na câmera, em frases curtas, uma por linha.",
+      "4. Uma chamada final que gere comentário, salvamento ou compartilhamento (não só 'siga para mais').",
+      "",
+      "Não use palavras difíceis, promessas de resultado garantido, nem clickbait enganoso. No final, me diga qual roteiro tem mais potencial de viralizar e por quê."
+    ].join("\n");
+  }
+  document.getElementById("form-icp").addEventListener("input", build);
+  document.getElementById("form-icp").addEventListener("change", build);
+  build();
+
+  function flash(btn){ var o = btn.textContent; btn.textContent = "Copiado!"; btn.classList.add("done"); setTimeout(function(){ btn.textContent = o; btn.classList.remove("done"); }, 1600); }
+  function copyText(text, btn){
+    var fallback = function(){
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); flash(btn); } catch(e) { btn.textContent = "Selecione e copie"; }
+      document.body.removeChild(ta);
+    };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ flash(btn); }, fallback); else fallback(); } catch(e) { fallback(); }
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-copy]"); if (!b) return;
+    var el = document.getElementById(b.getAttribute("data-copy")); if (el) copyText(el.textContent, b);
+  });
+})();
+</script>
+</body>
+</html>

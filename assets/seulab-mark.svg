@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">SeuLab</title>
+<desc id="desc">Símbolo de play em gradiente violeta e ciano.</desc>
+<defs>
+  <linearGradient id="g1" x1="20" y1="20" x2="104" y2="108" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#B06CFF"/>
+    <stop offset=".42" stop-color="#7C3CFF"/>
+    <stop offset=".76" stop-color="#3D7BFF"/>
+    <stop offset="1" stop-color="#35E0D0"/>
+  </linearGradient>
+  <linearGradient id="g2" x1="38" y1="28" x2="90" y2="94" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#8B5CF6"/>
+    <stop offset="1" stop-color="#35D7C9"/>
+  </linearGradient>
+  <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<rect width="128" height="128" rx="30" fill="#090B12"/>
+<path d="M32 24 L98 64 L32 104" fill="none" stroke="url(#g1)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+<path d="M39 40 L78 64 L39 88 Z" fill="#0A0D16" stroke="url(#g2)" stroke-width="3" stroke-linejoin="round"/>
+</svg>

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07080D">
-<meta name="description" content="SeuLab Editor de Vídeos IA — um fluxo guiado da Pulso Lab para editar vídeos com Claude Code ou Codex + Remotion, sem precisar dominar editores tradicionais.">
-<title>SeuLab · Editor de Vídeos IA | Pulso Lab</title>
+<meta name="description" content="SeuLab — grave no celular, a IA deixa pronto para postar. Roteiro, corte, legenda, zoom e exportação com Claude Code ou Codex + Remotion. Uma criação Pulso Lab.">
+<title>SeuLab · Grave no celular. A IA deixa pronto para postar. | Pulso Lab</title>
 <link rel="icon" href="assets/seulab-favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,9 +31,9 @@ button,input{font:inherit}
 .narrow{width:min(780px,calc(100% - 40px));margin-inline:auto}
 section{padding:96px 0}
 h1,h2,h3{font-family:var(--display);margin:0;line-height:1.02;text-wrap:balance}
-h1{font-size:clamp(50px,7vw,92px);font-weight:900;font-stretch:120%;letter-spacing:-.05em}
-h2{font-size:clamp(36px,5vw,62px);font-weight:850;font-stretch:116%;letter-spacing:-.035em}
-h3{font-size:clamp(22px,2.4vw,30px);font-weight:780;letter-spacing:-.02em}
+h1{font-size:clamp(46px,6.6vw,84px);font-weight:900;font-stretch:120%;letter-spacing:-.05em}
+h2{font-size:clamp(34px,4.8vw,58px);font-weight:850;font-stretch:116%;letter-spacing:-.035em}
+h3{font-size:clamp(20px,2.3vw,27px);font-weight:780;letter-spacing:-.02em}
 p{margin:0}
 .eyebrow{font:700 11px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--cyan)}
 .lede{font-size:clamp(18px,2vw,21px);color:var(--muted);max-width:64ch}
@@ -57,14 +57,14 @@ p{margin:0}
 .nav-links a{text-decoration:none}
 .nav-links a:hover{color:#fff}
 .nav-cta{padding:9px 14px;min-height:auto;font-size:13px}
-.hero{padding:86px 0 78px;position:relative}
+.hero{padding:70px 0 72px;position:relative}
 .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:58px;align-items:center}
 .hero-copy{position:relative;z-index:2}
-.hero .eyebrow{margin-bottom:20px}
+.hero .eyebrow{margin-bottom:18px}
 .hero h1 strong{font-weight:900}
-.hero .lede{margin-top:25px}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:31px}
-.hero-proof{display:flex;gap:17px;flex-wrap:wrap;margin-top:20px;color:#8E98AB;font-size:12px}
+.hero .lede{margin-top:21px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-proof{display:flex;gap:17px;flex-wrap:wrap;margin-top:19px;color:#8E98AB;font-size:12px}
 .hero-proof span:before{content:"✓";color:var(--cyan);margin-right:6px;font-weight:800}
 .hero-visual{position:relative;min-width:0}
 .editor{border-radius:23px;background:#090C12;border:1px solid #2A3040;box-shadow:var(--shadow),0 0 80px rgba(139,92,246,.13);overflow:hidden;position:relative}
@@ -103,8 +103,10 @@ p{margin:0}
 .problem-copy{position:sticky;top:105px;display:grid;gap:18px}
 .problem-cards{display:grid;gap:12px}
 .problem-card{border:1px solid var(--line);background:linear-gradient(145deg,#0D1018,#10141E);border-radius:18px;padding:23px;display:grid;grid-template-columns:43px 1fr;gap:15px}
-.iconbox{width:43px;height:43px;border-radius:12px;background:#181C29;border:1px solid #2B3243;display:grid;place-items:center;color:var(--violet2);font:800 15px var(--mono)}
+.iconbox{width:43px;height:43px;border-radius:12px;background:#181C29;border:1px solid #2B3243;display:grid;place-items:center;color:var(--violet2);font:800 15px var(--mono);flex-shrink:0}
+.iconbox.x{color:var(--red)}
 .problem-card p{color:var(--muted);font-size:14px;margin-top:5px}
+.problem-card p b{color:var(--cyan2);font-weight:700}
 .transition{background:linear-gradient(180deg,#090B11,#07080D)}
 .compare{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch}
 .compare-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:27px}
@@ -116,8 +118,8 @@ p{margin:0}
 .compare-card.before li:before{content:"×";color:#FF777E;font-weight:900}.compare-card.after li:before{content:"✓";color:var(--cyan);font-weight:900}
 .compare-arrow{align-self:center;width:47px;height:47px;border:1px solid #30374A;border-radius:50%;display:grid;place-items:center;color:var(--violet2);font-size:22px}
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.feature{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#0D1018,#111520);padding:24px;min-height:205px;display:flex;flex-direction:column}
-.feature-num{font:750 10px var(--mono);color:#6E7890}.feature h3{font-size:23px;margin-top:21px}.feature p{color:var(--muted);font-size:14px;margin-top:10px}
+.feature{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#0D1018,#111520);padding:24px;min-height:150px;display:flex;flex-direction:column}
+.feature-num{font:750 10px var(--mono);color:#6E7890}.feature h3{font-size:21px;margin-top:17px}.feature p{color:var(--muted);font-size:14px;margin-top:10px}
 .feature .mini{margin-top:auto;padding-top:18px;color:var(--cyan);font:700 9px var(--mono);letter-spacing:.07em;text-transform:uppercase}
 .flow{border:1px solid var(--line);border-radius:27px;background:linear-gradient(145deg,#0E1119,#121725);overflow:hidden}
 .flow-top{padding:35px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr .9fr;gap:30px;align-items:end}
@@ -131,18 +133,23 @@ p{margin:0}
 .mode:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;filter:blur(60px);opacity:.12;right:-50px;top:-60px;background:var(--violet)}
 .mode.b:after{background:var(--cyan)}
 .mode-label{display:flex;align-items:center;gap:10px;font:700 10px var(--mono);color:#AAB3C3;text-transform:uppercase;letter-spacing:.1em}.mode-badge{width:30px;height:30px;border-radius:9px;background:var(--violet);display:grid;place-items:center;color:#fff}.mode.b .mode-badge{background:#197E77}
-.mode h3{font-size:30px;margin-top:19px}.mode p{color:var(--muted);font-size:14px;margin-top:11px}.mode ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:9px;color:#BAC2D0;font-size:13px}.mode li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:8px}
+.mode h3{font-size:28px;margin-top:17px}.mode p{color:var(--muted);font-size:14px;margin-top:11px}.mode ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:9px;color:#BAC2D0;font-size:13px}.mode li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:8px}
+.mode-foot{margin-top:18px;padding-top:16px;border-top:1px solid #232938;color:var(--muted);font-size:12.5px}.mode-foot b{color:#D9DEEA}
 .deliver{display:grid;grid-template-columns:.88fr 1.12fr;gap:48px;align-items:center}
 .stack{position:relative;min-height:430px}
 .stack-card{position:absolute;left:50%;width:min(430px,88%);border:1px solid #30374A;border-radius:20px;background:#10141F;padding:25px;box-shadow:0 25px 60px rgba(0,0,0,.3)}
 .stack-card:nth-child(1){transform:translateX(-50%) rotate(-5deg);top:46px;opacity:.45}
 .stack-card:nth-child(2){transform:translateX(-50%) rotate(3deg);top:25px;opacity:.72}
 .stack-card:nth-child(3){transform:translateX(-50%);top:0;background:linear-gradient(145deg,#15192A,#0D1518);border-color:#423B69}
-.stack-brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800}.stack-screen{margin-top:20px;height:215px;border:1px solid #293145;border-radius:13px;background:linear-gradient(145deg,#2C205B,#12182B 55%,#0D5F5A);position:relative;overflow:hidden}.stack-screen:after{content:"PROMPT → VÍDEO";position:absolute;left:16px;bottom:15px;color:#fff;font:850 27px/1 var(--display);letter-spacing:-.04em}
+.stack-brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800}.stack-screen{margin-top:20px;height:215px;border:1px solid #293145;border-radius:13px;background:linear-gradient(145deg,#2C205B,#12182B 55%,#0D5F5A);position:relative;overflow:hidden}.stack-screen:after{content:"CELULAR → REELS";position:absolute;left:16px;bottom:15px;color:#fff;font:850 25px/1 var(--display);letter-spacing:-.04em}
 .deliver-list{display:grid;gap:11px;margin-top:27px}.deliver-item{display:grid;grid-template-columns:38px 1fr;gap:13px;border-bottom:1px solid #202635;padding:0 0 14px}.deliver-item:last-child{border:0}.deliver-item i{font-style:normal;width:38px;height:38px;border-radius:10px;background:#181D2B;display:grid;place-items:center;color:var(--violet2);font:800 11px var(--mono)}.deliver-item b{display:block}.deliver-item span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .calc-shell{border:1px solid var(--line);background:#0D1018;border-radius:24px;padding:31px;display:grid;grid-template-columns:1fr .9fr;gap:28px}
-.calc-fields{display:grid;gap:17px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700}.field input{width:100%;background:#090C12;border:1px solid #2A3142;color:#fff;padding:12px 13px;border-radius:10px;outline:none}.field input:focus{border-color:var(--violet)}
-.calc-result{border-radius:18px;background:linear-gradient(145deg,#5C3DC4,#245E65);padding:28px;display:flex;flex-direction:column;justify-content:space-between}.calc-kicker{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.1em;opacity:.75}.calc-big{font:850 clamp(52px,6vw,76px)/1 var(--display);letter-spacing:-.05em;margin-top:8px}.calc-sub{border-top:1px solid rgba(255,255,255,.22);padding-top:14px;margin-top:24px;font-size:12px;opacity:.8}
+.calc-fields{display:grid;gap:17px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700}.field span.help{color:var(--faint);font-size:11.5px}.field input{width:100%;background:#090C12;border:1px solid #2A3142;color:#fff;padding:12px 13px;border-radius:10px;outline:none}.field input:focus{border-color:var(--violet)}
+.calc-result{border-radius:18px;background:linear-gradient(145deg,#5C3DC4,#245E65);padding:28px;display:flex;flex-direction:column;gap:16px}
+.calc-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.calc-kicker{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.1em;opacity:.78}
+.calc-big{font:850 clamp(30px,4vw,42px)/1 var(--display);letter-spacing:-.04em}
+.calc-sub{border-top:1px solid rgba(255,255,255,.22);padding-top:14px;margin-top:auto;font-size:11.5px;opacity:.8}
 .fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.fit-card{border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:27px}.fit-card.no{background:#110E13}.fit-card ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:11px;color:#ADB5C5;font-size:14px}.fit-card.yes li:before{content:"✓";color:var(--cyan);font-weight:900;margin-right:9px}.fit-card.no li:before{content:"×";color:#FF777E;font-weight:900;margin-right:9px}
 .requirements{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.req{border:1px solid var(--line);background:#0C0F17;border-radius:16px;padding:21px}.req b{display:block;font-size:14px}.req span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
 .offer-wrap{position:relative}
@@ -159,20 +166,20 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
   .nav-links a:not(.btn){display:none}.hero-grid,.problem-grid,.deliver,.offer,.calc-shell{grid-template-columns:1fr}.hero-visual{max-width:720px}.problem-copy{position:static}.features{grid-template-columns:1fr 1fr}.requirements{grid-template-columns:1fr 1fr}.deliver .stack{order:2}.flow-top{grid-template-columns:1fr}
 }
 @media(max-width:680px){
-  .wrap,.narrow{width:min(100% - 28px,1160px)}section{padding:72px 0}.announcement{font-size:10px}.brand small{display:none}.nav-cta{font-size:11px}.hero{padding-top:62px}.hero-grid{gap:38px}.hero-actions .btn{width:100%}.float-card{display:none}.editor-body{grid-template-columns:68px 1fr}.toolrail{font-size:8px;padding-inline:5px}.workspace{padding:9px}.canvas-head{font-size:16px}.features,.modes,.fit-grid,.flow-demo{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.compare-arrow{transform:rotate(90deg);justify-self:center}.requirements{grid-template-columns:1fr}.offer{padding:27px}.flow-top{padding:25px}.flow-demo{padding:20px 25px 25px}.calc-shell{padding:22px}.stack{min-height:355px}.stack-screen{height:175px}.footer-inner{display:grid}.hero h1{font-size:clamp(46px,14vw,70px)}
+  .wrap,.narrow{width:min(100% - 28px,1160px)}section{padding:72px 0}.announcement{font-size:10px}.brand small{display:none}.nav-cta{font-size:11px}.hero{padding-top:50px}.hero-grid{gap:38px}.hero-actions .btn{width:100%}.float-card{display:none}.editor-body{grid-template-columns:68px 1fr}.toolrail{font-size:8px;padding-inline:5px}.workspace{padding:9px}.canvas-head{font-size:16px}.features,.modes,.fit-grid,.flow-demo{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.compare-arrow{transform:rotate(90deg);justify-self:center}.requirements{grid-template-columns:1fr}.offer{padding:27px}.flow-top{padding:25px}.flow-demo{padding:20px 25px 25px}.calc-shell{padding:22px}.stack{min-height:355px}.stack-screen{height:175px}.footer-inner{display:grid}.hero h1{font-size:clamp(40px,13vw,62px)}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
 </style>
 </head>
 <body>
-<div class="announcement">SEULAB · EDIÇÃO 01 &nbsp;•&nbsp; ACESSO IMEDIATO &nbsp;•&nbsp; PAGAMENTO ÚNICO</div>
+<div class="announcement">SEULAB · EDIÇÃO 01 &nbsp;•&nbsp; ACESSO IMEDIATO &nbsp;•&nbsp; 7 DIAS DE GARANTIA</div>
 
 <header class="nav">
   <div class="wrap nav-inner">
     <a class="brand" href="#inicio"><img class="brand-logo" src="assets/seulab-mark.svg" alt="" aria-hidden="true"><span>SeuLab <small>BY PULSO LAB</small></span></a>
     <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#comece">Nunca gravei</a>
       <a href="#como-funciona">Como funciona</a>
-      <a href="#o-que-recebe">O que recebe</a>
       <a href="#faq">FAQ</a>
       <a class="btn primary nav-cta" href="#oferta">Quero o SeuLab</a>
     </nav>
@@ -183,23 +190,23 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
 <section class="hero" id="inicio">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <div class="eyebrow">Pulso Lab apresenta · Editor de Vídeos IA</div>
-      <h1>Edite vídeos com IA <span class="glow-text">sem virar editor de vídeo.</span></h1>
-      <p class="lede">O SeuLab é um fluxo guiado que transforma Claude Code ou Codex + Remotion em uma estação de edição: você descreve o resultado, a IA executa cortes, legendas, zooms, ritmo e exportação.</p>
+      <div class="eyebrow">Pulso Lab apresenta · SeuLab</div>
+      <h1>Grave no celular. A IA deixa <span class="glow-text">pronto para postar.</span></h1>
+      <p class="lede">Não sabe o que falar? A IA escreve o roteiro. Errou no meio? Ela corta. Sem tempo para editar? Ela coloca legenda, zoom e efeitos e entrega no formato do Reels. Você só grava e cola um prompt no Claude Code ou no Codex.</p>
       <div class="hero-actions">
-        <a class="btn primary" href="#oferta">Quero transformar meus vídeos →</a>
-        <a class="btn ghost" href="#como-funciona">Ver como funciona</a>
+        <a class="btn primary" href="#oferta" data-checkout>Quero começar por R$ 97 →</a>
+        <a class="btn ghost" href="#comece">Nunca gravei. Serve para mim?</a>
       </div>
-      <div class="hero-proof"><span>Sem precisar programar</span><span>Windows e Mac</span><span>7 dias de garantia</span></div>
+      <div class="hero-proof"><span>Acesso imediato</span><span>Passo a passo visual</span><span>7 dias de garantia</span></div>
     </div>
 
     <div class="hero-visual">
       <div class="editor">
-        <div class="editor-bar"><div class="traffic"><i></i><i></i><i></i></div><span class="editor-name">SeuLab / reels-vendas-01</span><span class="live">● IA ativa</span></div>
+        <div class="editor-bar"><div class="traffic"><i></i><i></i><i></i></div><span class="editor-name">SeuLab / video1.mp4</span><span class="live">● IA editando</span></div>
         <div class="editor-body">
           <aside class="toolrail"><b>PROJETO</b><span class="on">▶ Preview</span><span>▤ Legendas</span><span>◇ Cortes</span><span>↗ Zoom</span><span>♫ Áudio</span><span>⬆ Exportar</span></aside>
           <div class="workspace">
-            <div class="canvas"><span class="ratio">9:16 · REELS</span><div class="canvas-head">CONTEÚDO<br><b>QUE PRENDE</b></div><div class="person"></div><div class="caption">transforme um vídeo simples em <b>conteúdo profissional</b></div></div>
+            <div class="canvas"><span class="ratio">9:16 · REELS</span><div class="canvas-head">GRAVOU NO CELULAR<br><b>SAI PRONTO</b></div><div class="person"></div><div class="caption">a IA corta pausas, legenda e dá <b>zoom nos pontos certos</b></div></div>
             <div class="timeline"><div class="track"><span>V1</span><i style="width:82%"></i></div><div class="track"><span>TXT</span><i style="width:64%"></i></div><div class="track"><span>FX</span><i style="width:47%"></i></div><div class="playhead"></div></div>
           </div>
         </div>
@@ -218,48 +225,57 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
 <section>
   <div class="wrap problem-grid">
     <div class="problem-copy">
-      <div class="eyebrow">O problema não é gravar</div>
-      <h2>É tudo o que vem <span class="glow-text">depois.</span></h2>
-      <p class="lede">Um vídeo de 60 segundos pode virar horas de corte, legenda, ajuste e exportação. O SeuLab foi desenhado para tirar você da timeline e colocar a IA no trabalho operacional.</p>
+      <div class="eyebrow">O problema</div>
+      <h2>Você grava em 5 minutos. <span class="glow-text">E edita em 3 horas.</span></h2>
+      <p class="lede">Ou paga alguém para editar e espera dias. Enquanto isso, o conteúdo não sai — e as vendas também não.</p>
+      <p class="lede" style="font-size:16px">De 3 horas para alguns minutos de conversa.</p>
     </div>
     <div class="problem-cards">
-      <article class="problem-card"><div class="iconbox">01</div><div><h3>Cortar silêncio por silêncio</h3><p>Você perde tempo procurando pausas, erros e trechos repetidos que poderiam ser identificados automaticamente.</p></div></article>
-      <article class="problem-card"><div class="iconbox">02</div><div><h3>Legendar e sincronizar</h3><p>Legenda boa exige ritmo, destaque e leitura. A parte repetitiva pode ser delegada para a IA.</p></div></article>
-      <article class="problem-card"><div class="iconbox">03</div><div><h3>Fazer o vídeo “ter ritmo”</h3><p>Zoom, títulos, cortes e efeitos precisam acontecer nos pontos certos — não aleatoriamente.</p></div></article>
-      <article class="problem-card"><div class="iconbox">04</div><div><h3>Aprender um software complexo</h3><p>Você não precisa dominar dezenas de painéis para conseguir publicar um vídeo profissional para as redes.</p></div></article>
+      <article class="problem-card"><div class="iconbox">01</div><div><h3>Cortar pausa por pausa</h3><p>Arrastar a linha do tempo, apagar cada "ééé", recomeçar.</p></div></article>
+      <article class="problem-card"><div class="iconbox">02</div><div><h3>Legendar palavra por palavra</h3><p>A maioria das pessoas assiste sem som. Sem legenda, ninguém fica.</p></div></article>
+      <article class="problem-card"><div class="iconbox">03</div><div><h3>Depender de editor</h3><p>Briefing, fila, revisão e mais uma rodada de ajustes.</p></div></article>
+      <article class="problem-card"><div class="iconbox">04</div><div><h3>Aprender programa difícil</h3><p>CapCut, Premiere, After Effects. Tudo exige prática que você não tem tempo de ter.</p></div></article>
     </div>
   </div>
 </section>
 
-<section class="transition">
+<section class="transition" id="comece">
   <div class="wrap">
     <div class="section-head center">
-      <div class="eyebrow">A mudança de lógica</div>
-      <h2>De “como eu edito isso?” para <span class="glow-text">“é assim que eu quero”.</span></h2>
-      <p class="lede">O SeuLab transforma intenção em instrução. Você define o resultado; o agente de IA cuida da execução técnica dentro do fluxo.</p>
+      <div class="eyebrow">Para quem ainda não grava</div>
+      <h2>O que te impede de começar, <span class="glow-text">o kit resolve.</span></h2>
+      <p class="lede">A maioria das pessoas não trava na edição. Trava antes: não sabe o que falar, tem medo de errar ou acha que precisa de estúdio.</p>
     </div>
-    <div class="compare">
-      <article class="compare-card before"><span class="compare-tag">Antes</span><h3>Você opera cada detalhe</h3><ul class="compare-list"><li>Procura os trechos manualmente</li><li>Ajusta legenda bloco por bloco</li><li>Decide onde colocar zoom e corte</li><li>Repete o mesmo processo em cada vídeo</li><li>Depende de conhecer o editor</li></ul></article>
-      <div class="compare-arrow">→</div>
-      <article class="compare-card after"><span class="compare-tag">Com SeuLab</span><h3>Você dirige o resultado</h3><ul class="compare-list"><li>Descreve o objetivo em português</li><li>Usa prompts prontos e personalizáveis</li><li>A IA aplica a estrutura técnica</li><li>Revisa e pede ajustes em conversa</li><li>Exporta no formato da plataforma</li></ul></article>
+    <div class="features" style="margin-bottom:40px">
+      <article class="feature"><div class="iconbox x" style="margin-bottom:4px">✕</div><h3 style="font-size:17px;color:#C7CCDA">Não sei o que falar.</h3><p><b>A IA escreve os roteiros.</b> Você diz o que vende e para quem, e recebe 7 roteiros curtos, prontos para ler.</p></article>
+      <article class="feature"><div class="iconbox x" style="margin-bottom:4px">✕</div><h3 style="font-size:17px;color:#C7CCDA">Tenho medo de errar.</h3><p><b>Pode errar.</b> Gaguejou, esqueceu, recomeçou? Os cortes saem automáticos na edição.</p></article>
+      <article class="feature"><div class="iconbox x" style="margin-bottom:4px">✕</div><h3 style="font-size:17px;color:#C7CCDA">Não tenho equipamento.</h3><p><b>Só o celular.</b> Na vertical, de frente para uma janela. O guia mostra como.</p></article>
+    </div>
+    <div class="section-head" style="margin-bottom:24px"><h3>Seu primeiro vídeo em 3 movimentos</h3></div>
+    <div class="features">
+      <article class="feature"><span class="feature-num">PASSO 1</span><h3 style="font-size:19px">Peça o roteiro</h3><p>Cole o prompt de roteiros e escolha um dos 7.</p><span class="mini">⏱ 2 min</span></article>
+      <article class="feature"><span class="feature-num">PASSO 2</span><h3 style="font-size:19px">Grave no celular</h3><p>Leia o roteiro. Se errar, continue falando.</p><span class="mini">⏱ 5 min</span></article>
+      <article class="feature"><span class="feature-num">PASSO 3</span><h3 style="font-size:19px">Cole o prompt de edição</h3><p>A IA corta, legenda, dá zoom e entrega pronto.</p><span class="mini">⏱ minutos</span></article>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">O que você consegue pedir</div>
-      <h2>Uma linguagem de edição feita para <span class="glow-text">quem cria conteúdo.</span></h2>
-      <p class="lede">Não são botões mágicos: são instruções prontas para orientar a IA a executar tarefas concretas no seu projeto.</p>
+    <div class="section-head center">
+      <div class="eyebrow">Dois caminhos, um kit</div>
+      <h2>Escolha o que você <span class="glow-text">precisa hoje.</span></h2>
+      <p class="lede">Os dois caminhos funcionam com um prompt pronto. Você só preenche as escolhas, copia e cola.</p>
     </div>
-    <div class="features">
-      <article class="feature"><span class="feature-num">01 / CORTE</span><h3>Remova pausas e erros</h3><p>Peça para enxugar silêncios, tentativas repetidas e trechos que quebram o ritmo.</p><span class="mini">Vídeo mais direto</span></article>
-      <article class="feature"><span class="feature-num">02 / LEGENDA</span><h3>Crie legendas dinâmicas</h3><p>Gere blocos legíveis, com destaques nas palavras importantes e posicionamento pensado para vertical.</p><span class="mini">Mais leitura sem áudio</span></article>
-      <article class="feature"><span class="feature-num">03 / RITMO</span><h3>Aplique zooms de ênfase</h3><p>Use mudanças de escala nos pontos importantes para criar variação visual sem exagero.</p><span class="mini">Retenção visual</span></article>
-      <article class="feature"><span class="feature-num">04 / TEXTO</span><h3>Abra com um gancho</h3><p>Inclua títulos, chamadas e palavras-chave para contextualizar o vídeo nos primeiros segundos.</p><span class="mini">Clareza imediata</span></article>
-      <article class="feature"><span class="feature-num">05 / ÁUDIO</span><h3>Organize música e efeitos</h3><p>Defina trilha, volume e pequenos efeitos de transição sem ficar ajustando cada elemento na mão.</p><span class="mini">Acabamento</span></article>
-      <article class="feature"><span class="feature-num">06 / EXPORT</span><h3>Prepare para cada formato</h3><p>Oriente a saída para Reels, TikTok, Shorts, feed ou horizontal, conforme o projeto.</p><span class="mini">Pronto para publicar</span></article>
+    <div class="modes">
+      <article class="mode"><div class="mode-label"><span class="mode-badge">A</span>Edite meu vídeo</div><h3>Você grava. A IA edita por completo.</h3><p>Para quem já grava falando para a câmera e quer o vídeo pronto para postar.</p>
+        <ul><li>Corta pausas e silêncios automaticamente</li><li>Coloca legendas em português, no estilo das redes</li><li>Dá zoom nos momentos de ênfase</li><li>Título de abertura e chamada final</li><li>Efeitos sonoros e música de fundo</li><li>Exporta no formato do Reels, do feed ou do YouTube</li></ul>
+        <div class="mode-foot"><b>O que você faz:</b> diz o nome do arquivo, escolhe o estilo e cola o prompt.</div>
+      </article>
+      <article class="mode b"><div class="mode-label"><span class="mode-badge">B</span>Crie um vídeo animado</div><h3>Você tem a ideia. A IA anima do zero.</h3><p>Para lançar produto, anunciar oferta ou explicar um serviço sem gravar nada.</p>
+        <ul><li>Escreve o roteiro e mostra para você aprovar</li><li>Anima textos, cenas e transições com cara de agência</li><li>4 estilos visuais prontos para escolher</li><li>Locução com voz de IA, se você quiser</li><li>Capa do vídeo no mesmo visual</li><li>Vira um modelo que você reaproveita toda semana</li></ul>
+        <div class="mode-foot"><b>O que você faz:</b> descreve o produto, escolhe o estilo e cola o prompt.</div>
+      </article>
     </div>
   </div>
 </section>
@@ -268,27 +284,14 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
   <div class="wrap">
     <div class="flow">
       <div class="flow-top">
-        <div><div class="eyebrow">Como funciona na prática</div><h2 style="margin-top:15px">Você conversa. A IA <span class="glow-text">constrói.</span></h2></div>
+        <div><div class="eyebrow">Como funciona na prática</div><h2 style="margin-top:15px">Três passos, do zero <span class="glow-text">ao vídeo pronto.</span></h2></div>
         <p class="lede">O guia conduz a instalação e entrega prompts estruturados. Depois da primeira configuração, o fluxo passa a ser repetível.</p>
       </div>
       <div class="flow-demo">
-        <article class="flow-step"><span class="step-n">PASSO 01</span><strong>Prepare</strong><span>Siga o guia visual para configurar Claude Code ou Codex e o ambiente do projeto.</span><div class="code-line"><b>✓</b> ambiente verificado<br><b>✓</b> Remotion configurado</div></article>
-        <article class="flow-step"><span class="step-n">PASSO 02</span><strong>Descreva</strong><span>Escolha um dos prompts prontos e diga como quer o vídeo.</span><div class="code-line">“corte pausas + <b>legenda dinâmica</b> + zoom nos trechos-chave”</div></article>
-        <article class="flow-step"><span class="step-n">PASSO 03</span><strong>Revise</strong><span>Abra a prévia, peça ajustes em conversa e exporte quando estiver do jeito que quer.</span><div class="code-line"><b>→</b> “deixe a legenda maior”<br><b>→</b> “acelere a abertura”</div></article>
+        <article class="flow-step"><span class="step-n">PASSO 01</span><strong>Prepare o computador</strong><span>O guia mostra, com imagens, como instalar o Claude Code ou o Codex no Windows ou no Mac.</span><div class="code-line"><b>✓</b> ambiente verificado<br><b>✓</b> Remotion configurado</div></article>
+        <article class="flow-step"><span class="step-n">PASSO 02</span><strong>Instale o kit com um prompt</strong><span>Você copia um único texto e cola. A IA instala tudo e testa sozinha.</span><div class="code-line">“corte pausas + <b>legenda dinâmica</b> + zoom nos trechos-chave”</div></article>
+        <article class="flow-step"><span class="step-n">PASSO 03</span><strong>Grave e cole</strong><span>Peça o roteiro, grave no celular, preencha as escolhas e cole o prompt. O vídeo fica pronto no navegador.</span><div class="code-line"><b>→</b> “deixe a legenda maior”<br><b>→</b> “acelere a abertura”</div></article>
       </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="section-head center">
-      <div class="eyebrow">Dois fluxos principais</div>
-      <h2>Comece com vídeo gravado ou <span class="glow-text">crie do zero.</span></h2>
-    </div>
-    <div class="modes">
-      <article class="mode"><div class="mode-label"><span class="mode-badge">A</span>Editar vídeo gravado</div><h3>Você grava. A IA monta.</h3><p>Ideal para Reels, Shorts, aulas curtas, vídeos de venda e conteúdo falando para a câmera.</p><ul><li>Cortes de pausas e erros</li><li>Legendas e destaques</li><li>Zooms e títulos</li><li>Música e efeitos</li><li>Exportação vertical ou horizontal</li></ul></article>
-      <article class="mode b"><div class="mode-label"><span class="mode-badge">B</span>Vídeo animado</div><h3>Você traz a ideia. A IA estrutura.</h3><p>Ideal para ofertas, explicações, anúncios, vídeos tipográficos e conteúdos em que você não quer aparecer.</p><ul><li>Estrutura de roteiro</li><li>Cenas e transições</li><li>Estilos visuais orientados</li><li>Textos animados</li><li>Modelo reaproveitável</li></ul></article>
     </div>
   </div>
 </section>
@@ -297,19 +300,20 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
   <div class="wrap deliver">
     <div class="stack" aria-label="Mockup do conteúdo SeuLab">
       <div class="stack-card"></div><div class="stack-card"></div>
-      <div class="stack-card"><div class="stack-brand"><img src="assets/seulab-mark.svg" alt="" aria-hidden="true" style="width:31px;height:31px;border-radius:9px">SeuLab · Editor de Vídeos IA</div><div class="stack-screen"></div></div>
+      <div class="stack-card"><div class="stack-brand"><img src="assets/seulab-mark.svg" alt="" aria-hidden="true" style="width:31px;height:31px;border-radius:9px">SeuLab · Edição 01</div><div class="stack-screen"></div></div>
     </div>
     <div>
-      <div class="eyebrow">O que você recebe</div>
-      <h2 style="margin-top:16px">O sistema completo para <span class="glow-text">começar sem improviso.</span></h2>
+      <div class="eyebrow">O que vem no kit</div>
+      <h2 style="margin-top:16px">Tudo pronto para <span class="glow-text">copiar e colar.</span></h2>
       <p class="lede" style="margin-top:18px">O produto foi organizado para reduzir a parte técnica da primeira instalação e deixar os próximos vídeos muito mais repetíveis.</p>
       <div class="deliver-list">
-        <div class="deliver-item"><i>01</i><div><b>Guia visual de instalação</b><span>Passo a passo para Windows e Mac, com o que fazer em cada etapa.</span></div></div>
-        <div class="deliver-item"><i>02</i><div><b>Prompt de instalação automática</b><span>Uma instrução estruturada para configurar, verificar e testar o ambiente.</span></div></div>
-        <div class="deliver-item"><i>A</i><div><b>Prompt de edição completa</b><span>Fluxo para vídeo gravado com escolhas de formato, legenda, zoom, música e efeitos.</span></div></div>
-        <div class="deliver-item"><i>B</i><div><b>Prompt de vídeo animado</b><span>Fluxo para construir peças animadas a partir da ideia e do objetivo.</span></div></div>
-        <div class="deliver-item"><i>16</i><div><b>Ajustes rápidos</b><span>Comandos prontos como “legenda maior”, “corte mais rápido” e “troque a cor”.</span></div></div>
-        <div class="deliver-item"><i>?</i><div><b>Prompt de socorro</b><span>Para diagnosticar o que travou e pedir uma correção explicada em português.</span></div></div>
+        <div class="deliver-item"><i>▶</i><div><b>Comece a Gravar</b><span>Prompt que cria 7 roteiros para a sua primeira semana e guia de gravação no celular.</span></div></div>
+        <div class="deliver-item"><i>1</i><div><b>Guia visual de instalação</b><span>Claude Code ou Codex, Windows ou Mac, com o que aparece em cada tela.</span></div></div>
+        <div class="deliver-item"><i>2</i><div><b>Prompt de instalação automática</b><span>Um texto que instala o kit, confere e faz o primeiro teste.</span></div></div>
+        <div class="deliver-item"><i>A</i><div><b>Prompt "Edição completa"</b><span>Com montador: você escolhe formato, legenda, zoom, música e efeitos.</span></div></div>
+        <div class="deliver-item"><i>B</i><div><b>Prompt "Vídeo animado"</b><span>Com montador e 4 estilos visuais: elegante, vibrante, corporativo e tipográfico.</span></div></div>
+        <div class="deliver-item"><i>16</i><div><b>Ajustes prontos</b><span>"Legenda maior", "corte mais rápido", "troque a cor". Um clique para copiar.</span></div></div>
+        <div class="deliver-item"><i>?</i><div><b>Prompt de socorro</b><span>Travou? Cole e a IA explica o problema em português e resolve.</span></div></div>
       </div>
     </div>
   </div>
@@ -319,16 +323,21 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
   <div class="wrap">
     <div class="section-head">
       <div class="eyebrow">Faça a conta</div>
-      <h2>Quanto tempo a edição <span class="glow-text">consome hoje?</span></h2>
-      <p class="lede">Use seus próprios números. É apenas uma estimativa de planejamento, não uma promessa de economia.</p>
+      <h2>Quanto vale o seu tempo <span class="glow-text">de edição?</span></h2>
+      <p class="lede">Coloque os seus números. A conta considera 1 hora por vídeo com o kit, contando a revisão. Estimativa para planejamento, não é promessa de resultado.</p>
     </div>
     <div class="calc-shell">
       <div class="calc-fields">
-        <div class="field"><label for="videos">Vídeos por mês</label><input id="videos" type="number" min="1" max="200" value="8"></div>
-        <div class="field"><label for="horas">Horas gastas por vídeo hoje</label><input id="horas" type="number" min=".5" max="60" step=".5" value="3"></div>
-        <div class="field"><label for="meta">Meta de tempo por vídeo com o novo fluxo</label><input id="meta" type="number" min=".25" max="20" step=".25" value="1"></div>
+        <div class="field"><label for="c-videos">Vídeos por mês</label><input id="c-videos" type="number" min="1" max="200" value="8"></div>
+        <div class="field"><label for="c-horas">Horas que você gasta por vídeo hoje</label><span class="help">Edição, legenda e revisões, sua ou de quem você contrata.</span><input id="c-horas" type="number" min=".5" max="60" step=".5" value="3"></div>
+        <div class="field"><label for="c-valor">Quanto vale 1 hora de edição (R$)</label><input id="c-valor" type="number" min="10" max="2000" step="5" value="80"></div>
       </div>
-      <div class="calc-result" aria-live="polite"><div><span class="calc-kicker">Tempo potencialmente liberado / mês</span><div class="calc-big" id="saved">16 h</div></div><div class="calc-sub">A conta compara o tempo informado por você. O resultado real varia conforme duração, complexidade, computador e nível de revisão.</div></div>
+      <div class="calc-result" aria-live="polite">
+        <div class="calc-row"><span class="calc-kicker">Você recupera por mês</span><div class="calc-big" id="r-horas">16 h</div></div>
+        <div class="calc-row"><span class="calc-kicker">Equivale a</span><div class="calc-big" id="r-mes">R$ 1.280</div></div>
+        <div class="calc-row"><span class="calc-kicker">O kit se paga em</span><div class="calc-big" id="r-pay">1 vídeo</div></div>
+        <div class="calc-sub">Estimativa para planejamento. O resultado real varia conforme duração, complexidade, computador e nível de revisão.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -336,12 +345,24 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
 <section>
   <div class="wrap">
     <div class="section-head center">
-      <div class="eyebrow">Para quem faz sentido</div>
-      <h2>SeuLab não precisa ser <span class="glow-text">para todo mundo.</span></h2>
+      <div class="eyebrow">Para quem é</div>
+      <h2>Veja se o kit faz sentido <span class="glow-text">para você.</span></h2>
     </div>
     <div class="fit-grid">
-      <article class="fit-card yes"><h3>É para você se…</h3><ul><li>Cria conteúdo para Instagram, TikTok ou YouTube</li><li>Quer reduzir trabalho operacional de edição</li><li>Gosta da ideia de orientar a IA por texto</li><li>Tem computador Windows ou Mac</li><li>Topa seguir um passo a passo na primeira configuração</li></ul></article>
-      <article class="fit-card no"><h3>Talvez não seja se…</h3><ul><li>Quer um app de celular pronto de arrastar e soltar</li><li>Não quer usar Claude Code ou Codex</li><li>Precisa de pós-produção cinematográfica complexa</li><li>Não quer fazer nenhuma configuração inicial</li><li>Espera resultado de audiência garantido só pela ferramenta</li></ul></article>
+      <article class="fit-card yes"><h3>É para você se…</h3><ul>
+        <li>Quer começar a postar vídeos e não sabe por onde</li>
+        <li>Vende ou cria conteúdo pelo Instagram, TikTok ou YouTube</li>
+        <li>Grava vídeos falando para a câmera e perde tempo editando</li>
+        <li>Quer vídeos com acabamento profissional sem contratar editor</li>
+        <li>Quer praticidade: gravar, colar um prompt e postar</li>
+        <li>Topa seguir um passo a passo na primeira vez</li>
+      </ul></article>
+      <article class="fit-card no"><h3>Não é para você se…</h3><ul>
+        <li>Procura um aplicativo de celular de arrastar e soltar</li>
+        <li>Não quer assinar o Claude ou o ChatGPT</li>
+        <li>Precisa de filmes longos com efeitos especiais de cinema</li>
+        <li>Espera viralizar só por usar uma ferramenta</li>
+      </ul></article>
     </div>
   </div>
 </section>
@@ -349,14 +370,14 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
 <section style="padding-top:0">
   <div class="wrap">
     <div class="section-head">
-      <div class="eyebrow">Transparência antes da compra</div>
+      <div class="eyebrow">Sem surpresa depois da compra</div>
       <h2>O que você precisa ter.</h2>
     </div>
     <div class="requirements">
-      <div class="req"><b>Computador</b><span>Windows ou Mac. O fluxo não roda apenas pelo celular.</span></div>
-      <div class="req"><b>Acesso a uma IA compatível</b><span>Claude Code ou Codex conforme o caminho escolhido no guia.</span></div>
-      <div class="req"><b>Internet</b><span>Necessária para configuração, agentes e downloads do ambiente.</span></div>
-      <div class="req"><b>Licença adequada do Remotion</b><span>Indivíduos e equipes pequenas podem se enquadrar na licença gratuita; confira os termos atuais.</span></div>
+      <div class="req"><b>Um computador</b><span>Windows ou Mac. Não funciona só no celular.</span></div>
+      <div class="req"><b>Claude ou ChatGPT</b><span>Um plano pago que inclua o Claude Code ou o Codex.</span></div>
+      <div class="req"><b>Internet</b><span>Para instalar. Depois, a edição roda no seu computador.</span></div>
+      <div class="req"><b>Uso do Remotion</b><span>Grátis para pessoas físicas e empresas com até 3 funcionários.</span></div>
     </div>
   </div>
 </section>
@@ -366,42 +387,44 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
     <div class="offer">
       <div>
         <div class="eyebrow">SeuLab · Edição 01</div>
-        <h2 style="margin-top:15px">Da ideia ao vídeo pronto com um <span class="glow-text">fluxo que você repete.</span></h2>
+        <h2 style="margin-top:15px">Do primeiro roteiro ao <span class="glow-text">vídeo postado.</span></h2>
         <ul class="offer-list">
-          <li>Guia visual de instalação para Windows e Mac</li>
-          <li>Prompt de instalação e teste</li>
-          <li>Fluxo A: edição completa de vídeo gravado</li>
-          <li>Fluxo B: criação de vídeo animado</li>
-          <li>16 comandos de ajuste rápido</li>
-          <li>Prompt de socorro para diagnóstico</li>
-          <li>Acesso imediato aos arquivos desta edição</li>
+          <li>Comece a Gravar: 7 roteiros prontos para a sua primeira semana</li>
+          <li>Guia visual de instalação (Windows e Mac)</li>
+          <li>Prompt de instalação automática</li>
+          <li>Caminho A: edição completa do seu vídeo</li>
+          <li>Caminho B: vídeo animado do zero, 4 estilos</li>
+          <li>16 ajustes prontos para copiar</li>
+          <li>Prompt de socorro para quando travar</li>
+          <li>Atualizações desta edição do guia</li>
         </ul>
       </div>
       <div class="pricebox">
         <span class="old">De R$ 197</span>
         <div class="price"><small>R$</small>97</div>
         <div class="once">pagamento único · acesso imediato</div>
-        <!-- Link de checkout da oferta SeuLab na Cakto. Atualize CHECKOUT_URL no script no final da página. -->
-        <a class="btn primary" href="#oferta" data-checkout>Quero acessar o SeuLab →</a>
+        <!-- Link de checkout da oferta SeuLab na Cakto. Atualizado via CHECKOUT_URL no script no final da página. -->
+        <a class="btn primary" href="#oferta" data-checkout>Quero o SeuLab →</a>
         <div class="micro"><span>Pix ou cartão</span><span>7 dias de garantia</span></div>
       </div>
     </div>
-    <div class="guarantee"><div class="seal">7<small>DIAS</small></div><p><b>Garantia de 7 dias.</b> Você pode acessar o material, avaliar o fluxo e solicitar reembolso dentro do prazo aplicável caso decida que o produto não faz sentido para você.</p></div>
+    <div class="guarantee"><div class="seal">7<small>DIAS</small></div><p><b>Garantia incondicional de 7 dias.</b> Instale, teste os dois caminhos e, se não for para você, peça o reembolso dentro de 7 dias. Sem perguntas.</p></div>
   </div>
 </section>
 
 <section id="faq" style="padding-top:50px">
   <div class="narrow">
-    <div class="section-head"><div class="eyebrow">Perguntas frequentes</div><h2>Antes de começar.</h2></div>
+    <div class="section-head"><div class="eyebrow">Perguntas frequentes</div><h2>Ainda com dúvida?</h2></div>
     <div class="faq">
-      <details><summary>Eu preciso saber programar?</summary><p>Não é necessário dominar programação. A proposta é seguir o guia e usar instruções prontas. Ainda assim, você estará configurando ferramentas no computador, então precisa estar confortável em seguir passos técnicos simples.</p></details>
-      <details><summary>Isso é um aplicativo de edição próprio?</summary><p>Não. O SeuLab é um sistema guiado de implementação e prompts que usa ferramentas como Claude Code ou Codex em conjunto com Remotion. A página mostra visualmente o tipo de fluxo e resultado que você vai construir.</p></details>
-      <details><summary>Funciona no Windows e no Mac?</summary><p>O guia foi organizado para os dois sistemas. Algumas telas e comandos podem variar conforme atualizações das ferramentas.</p></details>
-      <details><summary>Posso editar vídeos para clientes?</summary><p>O fluxo pode ser usado em projetos comerciais, desde que você tenha as licenças adequadas das ferramentas utilizadas e respeite os termos de cada serviço.</p></details>
-      <details><summary>O Remotion é gratuito?</summary><p>A política de licenciamento pode variar por tipo e tamanho de organização. Consulte a licença oficial vigente do Remotion antes do uso comercial.</p></details>
-      <details><summary>Quanto tempo demora o primeiro vídeo?</summary><p>A primeira configuração tende a levar mais tempo porque inclui instalação e testes. Os projetos seguintes aproveitam o ambiente já preparado. O tempo de renderização depende do vídeo e do computador.</p></details>
-      <details><summary>O SeuLab garante mais visualizações ou vendas?</summary><p>Não. Ele ajuda no fluxo de produção e edição. Resultado de audiência ou vendas depende de conteúdo, oferta, distribuição, posicionamento e outros fatores.</p></details>
-      <details><summary>E se eu travar?</summary><p>O produto inclui um prompt de diagnóstico pensado para explicar o problema e orientar a correção de forma mais clara.</p></details>
+      <details><summary>Nunca gravei um vídeo. Serve para mim?</summary><p>Serve. O kit começa antes da edição: a IA escreve roteiros curtos para você ler, o guia mostra como gravar com o celular e os erros são cortados depois. Você não precisa gravar perfeito.</p></details>
+      <details><summary>Preciso de câmera, microfone ou luz?</summary><p>Não. Um celular gravando na vertical, de frente para uma janela, é suficiente para começar. Um microfone de lapela simples melhora o áudio, mas é opcional.</p></details>
+      <details><summary>Preciso saber programar?</summary><p>Não. Você copia e cola textos prontos. A IA faz a parte técnica e pede a sua permissão antes de cada passo.</p></details>
+      <details><summary>Funciona em português?</summary><p>Sim. Os prompts já pedem legendas, textos e locução em português do Brasil.</p></details>
+      <details><summary>Funciona no Windows e no Mac?</summary><p>Sim. O guia tem o passo a passo para os dois.</p></details>
+      <details><summary>Quanto tempo leva para o primeiro vídeo?</summary><p>A instalação leva cerca de 30 minutos na primeira vez. Depois, um vídeo leva minutos de conversa mais o tempo de exportar, que depende do tamanho do vídeo e do seu computador.</p></details>
+      <details><summary>Tenho que pagar mais alguma coisa?</summary><p>Você precisa de um plano pago do Claude ou do ChatGPT. A locução com voz de IA é opcional e usa o ElevenLabs, que tem plano gratuito limitado. O Remotion é gratuito para pessoas físicas e empresas com até 3 funcionários.</p></details>
+      <details><summary>O vídeo fica com cara de modelo pronto?</summary><p>Não, se você usar o montador. Você escolhe cores, estilo, textos e tom. Cada vídeo sai com a sua identidade.</p></details>
+      <details><summary>E se eu não gostar?</summary><p>Peça o reembolso em até 7 dias. Você recebe o valor de volta.</p></details>
     </div>
   </div>
 </section>
@@ -409,41 +432,49 @@ footer{padding:34px 0 48px;color:#646E82;font-size:11px}.footer-inner{display:fl
 <section class="final">
   <div class="narrow">
     <div class="eyebrow" style="color:#CBFFF9">PULSO LAB · SEULAB</div>
-    <h2 style="margin-top:16px">Pare de aprender a ferramenta.<br>Comece a dirigir o resultado.</h2>
-    <p class="lede">Transforme seu computador em um fluxo de edição assistido por IA e publique com mais consistência.</p>
-    <a class="btn white" href="#oferta">Quero conhecer o SeuLab →</a>
+    <h2 style="margin-top:16px">Seu primeiro vídeo está a um roteiro de distância.</h2>
+    <p class="lede">SeuLab por R$ 97, com 7 dias de garantia.</p>
+    <a class="btn white" href="#oferta" data-checkout>Quero começar agora →</a>
   </div>
 </section>
 </main>
 
 <footer>
   <div class="wrap footer-inner">
-    <div>SeuLab · Editor de Vídeos IA · desenvolvido pela Pulso Lab · 2026<br>Produto independente. Não é afiliado ao Remotion, Anthropic ou OpenAI. Marcas citadas pertencem aos respectivos titulares.</div>
+    <div>SeuLab · Edição 01 · uma criação Pulso Lab · 2026<br>Guia independente baseado no projeto de código aberto Remotion (github.com/remotion-dev/remotion), versão 4.0.535. Não é afiliado ao Remotion, à Anthropic ou à OpenAI. Claude, Codex e ChatGPT são marcas de seus respectivos donos.</div>
     <div>Design system: Pulso Violet + AI Cyan</div>
   </div>
 </footer>
 
 <script>
 (function(){
-  const videos=document.getElementById('videos');
-  const horas=document.getElementById('horas');
-  const meta=document.getElementById('meta');
-  const saved=document.getElementById('saved');
+  var PRICE = 97;
+  var brl = function(n){ return "R$ " + Math.round(n).toLocaleString("pt-BR"); };
+  var videos=document.getElementById('c-videos');
+  var horas=document.getElementById('c-horas');
+  var valor=document.getElementById('c-valor');
+  var rHoras=document.getElementById('r-horas');
+  var rMes=document.getElementById('r-mes');
+  var rPay=document.getElementById('r-pay');
   function calc(){
-    const v=Math.max(0,Math.min(200,Number(videos.value)||0));
-    const h=Math.max(0,Math.min(60,Number(horas.value)||0));
-    const m=Math.max(0,Math.min(20,Number(meta.value)||0));
-    const s=Math.max(0,v*(h-m));
-    saved.textContent=(Math.round(s*10)/10).toLocaleString('pt-BR')+' h';
+    var v = Math.max(0, Math.min(200, Number(videos.value)||0));
+    var h = Math.max(0, Math.min(60, Number(horas.value)||0));
+    var val = Math.max(0, Math.min(2000, Number(valor.value)||0));
+    var perVideo = Math.max(0, h - 1) * val;
+    var saved = Math.max(0, v * (h - 1));
+    rHoras.textContent = (Math.round(saved*10)/10).toLocaleString('pt-BR') + ' h';
+    rMes.textContent = brl(saved * val);
+    var n = perVideo > 0 ? Math.ceil(PRICE / perVideo) : 0;
+    rPay.textContent = n ? n + (n === 1 ? ' vídeo' : ' vídeos') : '—';
   }
-  [videos,horas,meta].forEach(el=>el.addEventListener('input',calc));
+  [videos,horas,valor].forEach(function(el){ el.addEventListener('input', calc); });
   calc();
 })();
 </script>
 
 <script>
 (function(){
-  // Link de checkout da oferta SeuLab na Cakto. Substitua quando a oferta estiver criada.
+  // Link de checkout da oferta SeuLab na Cakto.
   var CHECKOUT_URL = "https://pay.cakto.com.br/c2ebywp_1190788";
   document.querySelectorAll('[data-checkout]').forEach(function(a){ a.href = CHECKOUT_URL; });
 })();
